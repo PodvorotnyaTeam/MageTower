@@ -12,7 +12,7 @@ public class PlayerInteractor : MonoBehaviour
     InputActionReference scrollAction;
     Camera cam;
 
-    Grabbable heldObject;
+    IGrabbable heldObject;
     Rigidbody heldRb;
 
     public float minHoldDistance = 0.5f;
@@ -28,7 +28,6 @@ public class PlayerInteractor : MonoBehaviour
 
     public void OnInteract()
     {
-        Debug.Log("Interact action triggered");
         if (!interactAction.action.triggered) return;
 
         if (heldObject != null)
@@ -56,7 +55,7 @@ public class PlayerInteractor : MonoBehaviour
 
         UpdateHoldPoint();
     }
-    public void Grab(Grabbable obj)
+    public void Grab(IGrabbable obj)
     {
         heldObject = obj;
         heldRb = obj.GetComponent<Rigidbody>();
