@@ -22,7 +22,8 @@ public class CampfireMehanic : MonoBehaviour
     }
     public void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == 8 && threePlanksInPlace != true)
+        Debug.Log(other.gameObject.layer);
+        if (other.gameObject.layer == 7 && threePlanksInPlace != true)
         {
             k++;
             switch (k)
@@ -40,7 +41,7 @@ public class CampfireMehanic : MonoBehaviour
             }
             Destroy(other.gameObject);
         }
-        else if (other.gameObject.layer == 9 && threePlanksInPlace != false)
+        else if (other.gameObject.layer == 8 && threePlanksInPlace != false)
         {
             fire.SetActive(true);
             state.isCampfireLit = true;
