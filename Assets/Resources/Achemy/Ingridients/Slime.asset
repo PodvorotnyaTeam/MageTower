@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0782593464353e34da9151d76627ea76, type: 3}
+  m_Name: Slime
+  m_EditorClassIdentifier: Assembly-CSharp::Ingridient
+  nameIngridient: "\u0421\u043B\u0430\u0439\u043C"
+  ingredientPrefab: {fileID: 1125938860648566408, guid: abade6dcf6db9fb43b92764a862df360, type: 3}
+  cookingTime: 40
+  overcookingTime: 70
