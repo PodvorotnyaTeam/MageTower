@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c662f60dcff3e841b16c4c6a3c331c6, type: 3}
+  m_Name: quest_test_001
+  m_EditorClassIdentifier: Assembly-CSharp::QuestData
+  id: quest_test_001
+  title: Test quest
+  description: Collect 3 items
+  type: 0
+  objectives:
+  - id: 
+    type: 0
+    targetID: test_item
+    requiredAmount: 3
+  faction: {fileID: 11400000, guid: 8637c53c0bfe7da47ad2b91ab3a0d862, type: 2}
+  reputationReward: 25
+  reputationPenalty: 15
+  rewardGold: 100
+  timeLimit: 0
+  requiredFlags: []
