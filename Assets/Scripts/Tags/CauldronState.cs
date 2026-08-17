@@ -15,7 +15,14 @@ public class CauldronState : MonoBehaviour
     private List<GameObject> ingridientsInCauldron = new List<GameObject>();
     [SerializeField]
     private GameObject resultPoint;
+    [SerializeField]
+    private CampfireMehanic campfire;
+    [SerializeField]
+    private Bucket_behavior bucket_Behavior;
+    public bool cauldronIsFull = false;
+    public bool fireIsLit = false;
     private int k = 0;
+    private int f = 0;
 
     public void Awake()
     {
@@ -37,12 +44,15 @@ public class CauldronState : MonoBehaviour
             List<GameObject> tempGameObjects = new List<GameObject>(ingridientsInCauldron);
             foreach (GameObject ingridient in tempGameObjects)
             {
-                ingridient.GetComponent<IngridientStats>().cookingTIMER += Time.deltaTime;
-                if (ingridient.GetComponent<IngridientStats>().cookingTIMER >= ingridient.GetComponent<IngridientStats>().ingridient.cookingTime) //&ingridient.GetComponent<IngridientStats>().cookingTIMER < ingridient.GetComponent<IngridientStats>().ingridient.overcookingTime
-                {
-                    RecipeMatcher(ingridient.GetComponent<IngridientStats>().ingridient);
-                    ingridientsInCauldron.Remove(ingridient);
-                    Destroy(ingridient);
+                if (campfire.state.isCampfireLit && cauldronIsFull)
+                {    
+                    ingridient.GetComponent<IngridientStats>().cookingTIMER += Time.deltaTime;
+                    if (ingridient.GetComponent<IngridientStats>().cookingTIMER >= ingridient.GetComponent<IngridientStats>().ingridient.cookingTime) //&ingridient.GetComponent<IngridientStats>().cookingTIMER < ingridient.GetComponent<IngridientStats>().ingridient.overcookingTime
+                    {
+                        RecipeMatcher(ingridient.GetComponent<IngridientStats>().ingridient);
+                        ingridientsInCauldron.Remove(ingridient);
+                        Destroy(ingridient);
+                    }
                 }
                 //else if (ingridient.cookingTIMER >= ingridient.ingridient.overcookingTime)
                 //{
@@ -93,6 +103,14 @@ public class CauldronState : MonoBehaviour
         {
             Instantiate(failedRecipe.result, resultPoint.transform);
         }
+        bucket_Behavior.ResetWaterLLevels();
+
+        f += 1;
+        if (f > 2)
+        {
+            campfire.HardReset();
+        }
+        else campfire.SoftReset();
         tempRecipes = new List<Recipes>(recipes);
         ingridientsInCauldron.Clear();
         k = 0;

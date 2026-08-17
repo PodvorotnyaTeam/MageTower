@@ -7,7 +7,8 @@ public class IngridientEnums
         plants,
         minerals,
         salts,
-        mushrooms
+        mushrooms,
+        body_parts
     }
 
 }

@@ -938,7 +938,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &696715754
 Transform:
   m_ObjectHideFlags: 0
@@ -1567,6 +1567,10 @@ MonoBehaviour:
   failedRecipe: {fileID: 11400000, guid: 5f95e189495a6054dbfb4e7283819b78, type: 2}
   ingridientsInCauldron: []
   resultPoint: {fileID: 941212924}
+  campfire: {fileID: 1299016962}
+  bucket_Behavior: {fileID: 1381328184}
+  cauldronIsFull: 0
+  fireIsLit: 0
 --- !u!1 &941212924
 GameObject:
   m_ObjectHideFlags: 0
@@ -1854,7 +1858,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1199400886
 Transform:
   m_ObjectHideFlags: 0
@@ -2093,6 +2097,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8a0e328041e2814e8485d881299b2ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CampfireMehanic
+  state: {fileID: 0}
 --- !u!1 &1340510908
 GameObject:
   m_ObjectHideFlags: 0
@@ -2161,7 +2166,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4882c7f0b03ba6d44ac768e401a7ef33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bucket_behavior
-  angle: 45
+  tiltAngleThreshold: 45
+  rayDistance: 100
+  fillTime1: 1
+  fillTime2: 2
+  fillTime3: 3
   waterLevel1: {fileID: 1688024755}
   waterLevel2: {fileID: 1199400885}
   waterLevel3: {fileID: 1574247797}
@@ -3018,7 +3027,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1574247798
 Transform:
   m_ObjectHideFlags: 0
@@ -3529,7 +3538,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1688024756
 Transform:
   m_ObjectHideFlags: 0

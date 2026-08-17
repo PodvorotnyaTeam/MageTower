@@ -8,7 +8,7 @@ public class CampfireMehanic : MonoBehaviour
     private GameObject plank3;
     private GameObject fire;
     private int k;
-    private CampfireState state;
+    public CampfireState state;
 
     public void Awake()
     {
@@ -49,13 +49,17 @@ public class CampfireMehanic : MonoBehaviour
         }
     }
 
-    public void Reset()
+    public void SoftReset()
+    {
+        fire.SetActive(false);
+    }
+    public void HardReset()
     {
         k = 0;
-        threePlanksInPlace = false;
         plank1.SetActive(!threePlanksInPlace);
         plank2.SetActive(!threePlanksInPlace);
         plank3.SetActive(!threePlanksInPlace);
         fire.SetActive(!threePlanksInPlace);
+        threePlanksInPlace = false;
     }
 }

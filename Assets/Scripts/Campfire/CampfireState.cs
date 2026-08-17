@@ -24,7 +24,7 @@ public class CampfireState : MonoBehaviour
         if (timeBeforeFireGone < 0)
         {
             isCampfireLit = false;
-            campfire.Reset();
+            campfire.HardReset();
         }
     }
 }
