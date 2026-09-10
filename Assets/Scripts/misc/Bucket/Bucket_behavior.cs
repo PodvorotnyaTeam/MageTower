@@ -25,7 +25,7 @@ public class Bucket_behavior : MonoBehaviour, IInteractable
     public void Update()
     {
         Debug.DrawRay(transform.position, Vector3.down, Color.red, 10f);
-        Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, );
+        Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit);
         if (hit.collider != null && hit.collider.CompareTag("Cauldron's_bottom"))
         {
             Debug.Log("Попали в: " + hit.collider.name);
