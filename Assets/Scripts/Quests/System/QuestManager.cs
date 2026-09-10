@@ -13,6 +13,7 @@ public class QuestManager : MonoBehaviour
     public event Action<QuestInstance> OnQuestAdded;
     public event Action<QuestInstance> OnQuestUpdated;
     public event Action<QuestInstance> OnQuestCompleted;
+    public event Action<QuestInstance> OnQuestReadyToTurnIn;
 
     private void Awake()
     {
@@ -117,6 +118,8 @@ public class QuestManager : MonoBehaviour
         if (quest.objectives.All(o => o.isCompleted))
         {
             Debug.Log($"Quest ready to turn in: {quest.data.id}");
+
+            OnQuestReadyToTurnIn?.Invoke(quest);
         }
     }
 

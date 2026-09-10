@@ -4,6 +4,12 @@ public class NPCQuest : MonoBehaviour, IInteractable
 {
     [SerializeField] private QuestData quest;
 
+    public void Initialize(QuestData questData)
+    {
+        quest = questData;
+
+        Debug.Log($"NPCQuest initialized with quest: {quest.id}");
+    }
     public bool CanInteract(PlayerInteractor interactor) => true;
 
     public void Interact(PlayerInteractor interactor)
@@ -23,6 +29,11 @@ public class NPCQuest : MonoBehaviour, IInteractable
                 QuestManager.Instance.TurnInQuest(quest.id);
 
                 GameEvents.OnQuestTurnedIn?.Invoke(quest.id);
+
+                NPCController npcController = GetComponent<NPCController>();
+
+                if (npcController != null)
+                    npcController.Leave();
             }
             else
             {
@@ -31,11 +42,17 @@ public class NPCQuest : MonoBehaviour, IInteractable
 
             return;
         }
+
         Debug.Log("Quest given");
 
         QuestManager.Instance.AddQuest(quest);
 
         GameEvents.OnNPCInteracted?.Invoke(quest.id);
+
+        NPCController controller = GetComponent<NPCController>();
+
+        if (controller != null)
+            controller.Leave();
     }
 
     public string GetInteractionText()
