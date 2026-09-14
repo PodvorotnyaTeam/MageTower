@@ -4,7 +4,7 @@ public class Bucket_behavior : MonoBehaviour, IInteractable
 {
     [Header("Наклон")]
     public float tiltAngleThreshold = 45f; // угол, после которого ведро считается наклонённым
-    public float rayDistance = 10f;
+    public float rayDistance = 100f;
 
     [Header("Наполнение котла")]
     public float fillTime1 = 1f; // через сколько секунд налива включится 1 уровень воды
@@ -85,47 +85,7 @@ public class Bucket_behavior : MonoBehaviour, IInteractable
         waterLevel2.SetActive(false);
         waterLevel3.SetActive(false);
         cauldronState.cauldronIsFull = false;
-        pourTimer = 0;
+        isFull = false;
+        pourTimer = 0f;
     }
 }
-//using Unity.VisualScripting;
-//using UnityEngine;
-
-//public class Bucket_behavior : MonoBehaviour, IInteractable
-//{
-//    public int angle;
-//    private bool isFull;
-//    [SerializeField]
-//    private GameObject waterLevel1;
-//    [SerializeField]
-//    private GameObject waterLevel2;
-//    [SerializeField]
-//    private GameObject waterLevel3;
-//    [SerializeField]
-//    private CauldronState cauldronState;
-//    private IGrabbable grabbableComponent;
-//    private RaycastHit hit;
-
-//    public void Awake()
-//    {
-//        isFull = false;
-//        grabbableComponent = GetComponent<IGrabbable>();
-//    }
-
-//    public void Update()
-//    {
-//        Debug.DrawRay(transform.position, Vector3.down, Color.red, 10f);
-//        Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit);
-//        if (hit.collider != null && hit.collider.CompareTag("Cauldron's_bottom"))
-//        {
-//            Debug.Log("Попали в: " + hit.collider.name);
-//        }
-//    }
-
-//    public void Interact(PlayerInteractor interactor)
-//    {
-//        interactor.Grab(grabbableComponent);
-//        Vector3 dir = Quaternion.Euler(angle, 0, 0) * Vector3.down;
-
-//    }
-//}

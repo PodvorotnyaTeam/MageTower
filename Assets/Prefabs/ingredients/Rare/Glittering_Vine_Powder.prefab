@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &2403269673658742629
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2051768947129767098, guid: 06cc084b0c364d14dbd4de4cc6379c42, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: c2d78b9ca9ed1d140b957f6cd278c7fc, type: 2}
+    - target: {fileID: 2136674448852137786, guid: 06cc084b0c364d14dbd4de4cc6379c42, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 694ff84619fffd54ca46e355702b2b06, type: 2}
+    - target: {fileID: 3738455433130746686, guid: 06cc084b0c364d14dbd4de4cc6379c42, type: 3}
+      propertyPath: ingridient
+      value: 
+      objectReference: {fileID: 11400000, guid: 4f945ef4305965e409eafb64726b4f0f, type: 2}
+    - target: {fileID: 4834642166306952250, guid: 06cc084b0c364d14dbd4de4cc6379c42, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4834642166306952250, guid: 06cc084b0c364d14dbd4de4cc6379c42, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4834642166306952250, guid: 06cc084b0c364d14dbd4de4cc6379c42, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4834642166306952250, guid: 06cc084b0c364d14dbd4de4cc6379c42, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4834642166306952250, guid: 06cc084b0c364d14dbd4de4cc6379c42, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4834642166306952250, guid: 06cc084b0c364d14dbd4de4cc6379c42, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4834642166306952250, guid: 06cc084b0c364d14dbd4de4cc6379c42, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4834642166306952250, guid: 06cc084b0c364d14dbd4de4cc6379c42, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4834642166306952250, guid: 06cc084b0c364d14dbd4de4cc6379c42, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4834642166306952250, guid: 06cc084b0c364d14dbd4de4cc6379c42, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5462978138148315582, guid: 06cc084b0c364d14dbd4de4cc6379c42, type: 3}
+      propertyPath: m_Name
+      value: Glittering_Vine_Powder
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 06cc084b0c364d14dbd4de4cc6379c42, type: 3}

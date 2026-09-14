@@ -1,18 +1,25 @@
-using System.Collections.Generic;
+using System;
 using System.Collections;
-using UnityEngine;
-using UnityEngine.WSA;
+using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
+using UnityEngine.WSA;
 
 public class CauldronState : MonoBehaviour
 {
     public List<Recipes> recipes;
     public Ingridient overcookedIngridient;
-    public Recipes failedRecipe;
+
+    public List<GameObject> failedRecipes;
+
     private List<Recipes> tempRecipes = new List<Recipes>();
     private List<Recipes> sortRecipes = new List<Recipes>();
+
     [SerializeField]
     private List<GameObject> ingridientsInCauldron = new List<GameObject>();
+    private List<int> attributesInCauldron = new List<int>(new int[9]);
+
     [SerializeField]
     private GameObject resultPoint;
     [SerializeField]
@@ -45,19 +52,18 @@ public class CauldronState : MonoBehaviour
             foreach (GameObject ingridient in tempGameObjects)
             {
                 if (campfire.state.isCampfireLit && cauldronIsFull)
-                {    
+                {
                     ingridient.GetComponent<IngridientStats>().cookingTIMER += Time.deltaTime;
-                    if (ingridient.GetComponent<IngridientStats>().cookingTIMER >= ingridient.GetComponent<IngridientStats>().ingridient.cookingTime) //&ingridient.GetComponent<IngridientStats>().cookingTIMER < ingridient.GetComponent<IngridientStats>().ingridient.overcookingTime
+                    if (ingridient.GetComponent<IngridientStats>().cookingTIMER >= ingridient.GetComponent<IngridientStats>().ingridient.cookingTime)
                     {
-                        RecipeMatcher(ingridient.GetComponent<IngridientStats>().ingridient);
+                        for (int i = 0; i < 9; i++)
+                        {
+                            attributesInCauldron[i] += ingridient.GetComponent<IngridientStats>().ingridient.attributes[i];
+                        }
                         ingridientsInCauldron.Remove(ingridient);
                         Destroy(ingridient);
                     }
                 }
-                //else if (ingridient.cookingTIMER >= ingridient.ingridient.overcookingTime)
-                //{
-                //    RecipeMatcher(overcookedIngridient);
-                //}
             }
         }
     }
@@ -74,34 +80,69 @@ public class CauldronState : MonoBehaviour
         Debug.Log("Из котла был удалён" + other.name);
     }
 
-    public void RecipeMatcher(Ingridient ingridient)
+    public void RecipeMatcher()
     {
         sortRecipes = new List<Recipes>(tempRecipes);
         foreach (var recipe in sortRecipes)
         {
-            if (recipe.ingridients[k].nameIngridient != ingridient.nameIngridient)
+            for (int i = 0; i < 9; i++)
             {
-                tempRecipes.Remove(recipe);
+                int diff = Mathf.Abs(attributesInCauldron[i] - recipe.attributes[i]);
+                if (diff > recipe.maxDeviation) { tempRecipes.Remove(recipe); break; }
             }
         }
-        k++;
+    }
+
+    public void RarityChecker(double score, GameObject i)
+    {
+        if (score < 1)
+        {
+            i.transform.Find("Rarity/Epic").gameObject.SetActive(true);
+        }
+        else if (score < 2)
+        {
+            i.transform.Find("Rarity/Rare").gameObject.SetActive(true);
+        }
     }
 
     public void Brew()
     {
+        RecipeMatcher();
         if (tempRecipes.Count > 0)
         {
-            foreach (var recipe in tempRecipes)
+            if (tempRecipes.Count == 1)
             {
-                if (k == tempRecipes.First().ingridients.Count)
+                double deviation = 0;
+                for (int i = 0; i < 9; i++)
                 {
-                    Instantiate(tempRecipes.First().result, resultPoint.transform);
+                    int diff = Mathf.Abs(attributesInCauldron[i] - tempRecipes[0].attributes[i]);
+                    deviation += diff / tempRecipes[0].maxDeviation;
                 }
+                GameObject j = Instantiate(tempRecipes[0].result, resultPoint.transform);
+                RarityChecker(deviation, j);
+            }
+            else
+            {
+                List<double> deviations = new List<double>();
+                foreach (var item in tempRecipes)
+                {
+                    double deviation = 0;
+                    for (int i = 0; i < 9; i++)
+                    {
+                        int diff = Mathf.Abs(attributesInCauldron[i] - item.attributes[i]);
+                        deviation += diff / item.maxDeviation;
+                    }
+                    deviations.Add(deviation);
+                }
+                int index = deviations.IndexOf(deviations.Min());
+                GameObject j = Instantiate(tempRecipes[index].result, resultPoint.transform);
+                RarityChecker(deviations[index], j);
             }
         }
         else
         {
-            Instantiate(failedRecipe.result, resultPoint.transform);
+            int index = attributesInCauldron.IndexOf(attributesInCauldron.Max());
+            Instantiate(failedRecipes[index], resultPoint.transform);
         }
         bucket_Behavior.ResetWaterLLevels();
 
