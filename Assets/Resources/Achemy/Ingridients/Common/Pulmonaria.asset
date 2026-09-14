@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0782593464353e34da9151d76627ea76, type: 3}
+  m_Name: Pulmonaria
+  m_EditorClassIdentifier: Assembly-CSharp::Ingridient
+  nameIngridient: "\u041C\u0435\u0434\u0443\u043D\u0438\u0446\u0430"
+  ingredientPrefab: {fileID: 7677023989493651163, guid: 5c7bd56b5199d7348944231d03feb4da, type: 3}
+  tocisity: 1
+  acidity: 6
+  volatility: 2
+  viscosity: 4
+  thermoactivity: 5
+  vitality: 8
+  conductivity: 1
+  psychoactivity: 1
+  entropy: 1
+  attributes: 010000000600000002000000040000000500000008000000010000000100000001000000
+  i: "\u041F\u0418\u0414\u0410\u0420\u0410\u0421 \u0422\u0420\u0423"
+  cookingTime: 1
+  overcookingTime: 0

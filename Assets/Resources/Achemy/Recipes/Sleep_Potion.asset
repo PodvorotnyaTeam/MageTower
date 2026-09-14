@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ff669ff236882b46a2e1d7beefccaf7, type: 3}
+  m_Name: Sleep_Potion
+  m_EditorClassIdentifier: Assembly-CSharp::Recipes
+  nameRecipe: "\u0417\u0435\u043B\u044C\u0435 \u0441\u043D\u0430"
+  tocisity: 2
+  acidity: 5
+  volatility: 5
+  viscosity: 2
+  thermoactivity: 3
+  vitality: 3
+  conductivity: 1
+  psychoactivity: 8
+  entropy: 2
+  attributes: 020000000500000005000000020000000300000003000000010000000800000002000000
+  isCommon: 0
+  isEpic: 0
+  isIdeal: 0
+  maxDeviation: 2
+  result: {fileID: 310492083331670768, guid: c8ad13e8933fed944b5e0712f7e914bb, type: 3}

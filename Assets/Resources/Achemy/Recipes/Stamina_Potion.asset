@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ff669ff236882b46a2e1d7beefccaf7, type: 3}
+  m_Name: Stamina_Potion
+  m_EditorClassIdentifier: Assembly-CSharp::Recipes
+  nameRecipe: "\u0417\u0435\u043B\u044C\u0435 \u0431\u043E\u0434\u0440\u043E\u0441\u0442\u0438"
+  tocisity: 2
+  acidity: 4
+  volatility: 4
+  viscosity: 3
+  thermoactivity: 7
+  vitality: 7
+  conductivity: 7
+  psychoactivity: 4
+  entropy: 2
+  attributes: 020000000400000004000000030000000700000007000000070000000400000002000000
+  isCommon: 0
+  isEpic: 0
+  isIdeal: 0
+  maxDeviation: 3
+  result: {fileID: 310492083331670768, guid: 47e889d0b5d67424b85f990b0658c61c, type: 3}

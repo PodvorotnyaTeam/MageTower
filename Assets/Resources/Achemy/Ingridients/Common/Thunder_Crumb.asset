@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0782593464353e34da9151d76627ea76, type: 3}
+  m_Name: Thunder_Crumb
+  m_EditorClassIdentifier: Assembly-CSharp::Ingridient
+  nameIngridient: "\u0413\u0440\u043E\u043C\u043E\u0432\u0430\u044F \u043A\u0440\u043E\u0448\u043A\u0430"
+  ingredientPrefab: {fileID: 7677023989493651163, guid: 37fbbbca122e0f64bb61799f80b11833, type: 3}
+  tocisity: 1
+  acidity: 5
+  volatility: 4
+  viscosity: 2
+  thermoactivity: 6
+  vitality: 2
+  conductivity: 9
+  psychoactivity: 2
+  entropy: 4
+  attributes: 010000000500000004000000020000000600000002000000090000000200000004000000
+  i: "\u041F\u0418\u0414\u0410\u0420\u0410\u0421"
+  cookingTime: 1
+  overcookingTime: 0
