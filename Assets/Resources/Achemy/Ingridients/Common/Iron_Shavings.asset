@@ -14,15 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Ingridient
   nameIngridient: "\u0416\u0435\u043B\u0435\u0437\u043D\u0430\u044F \u0441\u0442\u0440\u0443\u0436\u043A\u0430"
   ingredientPrefab: {fileID: 7677023989493651163, guid: f28c7526e7dcd2e4cb49d2dc06bb33b2, type: 3}
-  tocisity: 1
-  acidity: 5
-  volatility: 1
-  viscosity: 7
-  thermoactivity: 3
-  vitality: 1
-  conductivity: 7
-  psychoactivity: 0
-  entropy: 1
+  tocisity: 0
+  acidity: 0
+  volatility: -2
+  viscosity: 3
+  thermoactivity: -2
+  vitality: -2
+  conductivity: 3
+  psychoactivity: -2
+  entropy: 0
   attributes: 010000000500000001000000070000000300000001000000070000000000000001000000
   i: "\u041F\u0418\u0414\u0410\u0420\u0410\u0421"
   cookingTime: 1
