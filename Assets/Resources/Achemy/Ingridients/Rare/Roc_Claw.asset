@@ -15,15 +15,15 @@ MonoBehaviour:
   nameIngridient: "\u041A\u043E\u0433\u043E\u0442\u044C \u043F\u0442\u0438\u0446\u044B
     \u0420\u0443\u0445"
   ingredientPrefab: {fileID: 7677023989493651163, guid: da0a64ac4c184ec428f2407d16849f5d, type: 3}
-  tocisity: 1
-  acidity: 5
-  volatility: 1
-  viscosity: 4
-  thermoactivity: 4
-  vitality: 6
-  conductivity: 5
-  psychoactivity: 1
-  entropy: 2
+  tocisity: 0
+  acidity: 0
+  volatility: -2
+  viscosity: 0
+  thermoactivity: 0
+  vitality: 3
+  conductivity: 3
+  psychoactivity: -2
+  entropy: 0
   attributes: 010000000500000001000000040000000400000006000000050000000100000002000000
   i: "\u043E\u043D \u0438\u0437 \u0437\u0430 \u044D\u0442\u043E\u0433\u043E \u043D\u0435
     \u043E\u0431\u043D\u043E\u0432\u043B\u044F\u043B \u0441\u0440\u0438\u043F\u0442\u0430\u0431\u043B"
