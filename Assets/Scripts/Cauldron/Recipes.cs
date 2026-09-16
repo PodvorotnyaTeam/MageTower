@@ -27,6 +27,7 @@ public class Recipes : ScriptableObject
     public GameObject result;
     public void Awake()
     {
+        attributes = new List<int>();
         attributes = new List<int> { tocisity, acidity, volatility, viscosity, thermoactivity, vitality, conductivity, psychoactivity, entropy };
     }
 }

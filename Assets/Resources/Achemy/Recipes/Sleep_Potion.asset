@@ -15,10 +15,10 @@ MonoBehaviour:
   nameRecipe: "\u0417\u0435\u043B\u044C\u0435 \u0441\u043D\u0430"
   tocisity: 2
   acidity: 5
-  volatility: 5
-  viscosity: 2
+  volatility: 7
+  viscosity: 3
   thermoactivity: 3
-  vitality: 3
+  vitality: 4
   conductivity: 1
   psychoactivity: 8
   entropy: 2

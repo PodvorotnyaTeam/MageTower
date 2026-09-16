@@ -14,13 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Recipes
   nameRecipe: "\u0417\u0435\u043B\u044C\u0435 \u0431\u043E\u0434\u0440\u043E\u0441\u0442\u0438"
   tocisity: 2
-  acidity: 4
-  volatility: 4
-  viscosity: 3
-  thermoactivity: 7
+  acidity: 6
+  volatility: 6
+  viscosity: 5
+  thermoactivity: 6
   vitality: 7
   conductivity: 7
-  psychoactivity: 4
+  psychoactivity: 8
   entropy: 2
   attributes: 020000000400000004000000030000000700000007000000070000000400000002000000
   isCommon: 0

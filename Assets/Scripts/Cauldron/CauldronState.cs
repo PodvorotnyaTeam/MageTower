@@ -13,12 +13,12 @@ public class CauldronState : MonoBehaviour
 
     public List<GameObject> failedRecipes;
 
-    private List<Recipes> tempRecipes = new List<Recipes>();
+    public List<Recipes> tempRecipes = new List<Recipes>();
     private List<Recipes> sortRecipes = new List<Recipes>();
 
     [SerializeField]
     private List<GameObject> ingridientsInCauldron = new List<GameObject>();
-    private List<int> attributesInCauldron = new List<int>(new int[9]);
+    public List<int> attributesInCauldron = new List<int> { 5, 5, 5, 5, 5, 5, 5, 5, 5 };
 
     [SerializeField]
     private GameObject resultPoint;
@@ -78,6 +78,11 @@ public class CauldronState : MonoBehaviour
     {
         ingridientsInCauldron.Remove(other.gameObject);
         Debug.Log("Из котла был удалён" + other.name);
+    }
+
+    private void RIUpdater()
+    {
+
     }
 
     public void RecipeMatcher()
@@ -153,6 +158,7 @@ public class CauldronState : MonoBehaviour
         }
         else campfire.SoftReset();
         tempRecipes = new List<Recipes>(recipes);
+        attributesInCauldron = new List<int> { 5, 5, 5, 5, 5, 5, 5, 5, 5 };
         ingridientsInCauldron.Clear();
         k = 0;
     }

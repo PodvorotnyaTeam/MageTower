@@ -17,12 +17,12 @@ MonoBehaviour:
   acidity: 4
   volatility: 3
   viscosity: 5
-  thermoactivity: 8
+  thermoactivity: 7
   vitality: 6
   conductivity: 8
   psychoactivity: 6
-  entropy: 4
-  attributes: 050000000400000003000000050000000800000006000000080000000600000004000000
+  entropy: 9
+  attributes: 050000000400000003000000050000000700000006000000080000000600000009000000
   isCommon: 0
   isEpic: 0
   isIdeal: 0

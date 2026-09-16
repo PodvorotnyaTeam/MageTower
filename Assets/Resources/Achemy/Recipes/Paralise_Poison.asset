@@ -20,7 +20,7 @@ MonoBehaviour:
   thermoactivity: 3
   vitality: 2
   conductivity: 2
-  psychoactivity: 2
+  psychoactivity: 6
   entropy: 4
   attributes: 080000000500000002000000070000000300000002000000020000000200000004000000
   isCommon: 0
