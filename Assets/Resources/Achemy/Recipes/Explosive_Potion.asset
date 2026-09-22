@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: Explosive_Potion
   m_EditorClassIdentifier: Assembly-CSharp::Recipes
   nameRecipe: "\u0417\u0435\u043B\u044C\u0435 \u0432\u0437\u0440\u044B\u0432\u0430"
-  tocisity: 4
-  acidity: 3
-  volatility: 9
-  viscosity: 1
-  thermoactivity: 9
-  vitality: 1
-  conductivity: 5
-  psychoactivity: 1
-  entropy: 9
-  attributes: 040000000300000009000000010000000900000001000000050000000100000009000000
+  tocisity: 0
+  acidity: 1
+  volatility: 3
+  viscosity: -2
+  thermoactivity: 5
+  vitality: -1
+  conductivity: 0
+  psychoactivity: 0
+  entropy: 7
+  attributes: 04000000050000000900000001000000090000000200000005000000040000000a000000
   isCommon: 0
   isEpic: 0
   isIdeal: 0

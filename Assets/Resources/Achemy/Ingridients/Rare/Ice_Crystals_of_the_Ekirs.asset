@@ -18,13 +18,13 @@ MonoBehaviour:
   tocisity: 0
   acidity: 0
   volatility: 0
-  viscosity: 0
+  viscosity: 1
   thermoactivity: -3
-  vitality: -2
-  conductivity: 3
-  psychoactivity: 3
-  entropy: 2
-  attributes: 020000000500000004000000030000000100000002000000060000000800000004000000
+  vitality: 0
+  conductivity: 1
+  psychoactivity: 2
+  entropy: 0
+  attributes: 00000000000000000000000000000000fdfffffffeffffff030000000300000002000000
   i: "\u041F\u0418\u0414\u0410\u0420\u0410\u0421"
   cookingTime: 1
   overcookingTime: 0

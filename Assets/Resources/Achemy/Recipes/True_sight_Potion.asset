@@ -13,18 +13,18 @@ MonoBehaviour:
   m_Name: True_sight_Potion
   m_EditorClassIdentifier: Assembly-CSharp::Recipes
   nameRecipe: "\u0417\u0435\u043B\u044C\u0435 \u044F\u0441\u043D\u043E\u0432\u0438\u0434\u0435\u043D\u0438\u044F"
-  tocisity: 4
-  acidity: 4
-  volatility: 5
-  viscosity: 3
-  thermoactivity: 5
-  vitality: 3
+  tocisity: 0
+  acidity: 0
+  volatility: 0
+  viscosity: 0
+  thermoactivity: 0
+  vitality: 0
   conductivity: 6
-  psychoactivity: 9
-  entropy: 8
-  attributes: 040000000400000005000000030000000500000003000000060000000900000008000000
+  psychoactivity: 6
+  entropy: 0
+  attributes: 070000000500000005000000060000000500000003000000070000000900000008000000
   isCommon: 0
   isEpic: 0
   isIdeal: 0
-  maxDeviation: 2
+  maxDeviation: 1
   result: {fileID: 310492083331670768, guid: 918ddb39119775e418529a458e12bbd4, type: 3}

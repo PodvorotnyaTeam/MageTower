@@ -16,15 +16,15 @@ MonoBehaviour:
     \u0433\u043B\u0430\u0437 \u0414\u0440\u0430\u043A\u043E\u043D\u0430"
   ingredientPrefab: {fileID: 7677023989493651163, guid: 6f8fda671cc42034bbcd9062f0d2e0d5, type: 3}
   tocisity: 0
-  acidity: 2
-  volatility: -2
+  acidity: 0
+  volatility: 0
   viscosity: 0
-  thermoactivity: -2
+  thermoactivity: -3
   vitality: 0
   conductivity: 3
   psychoactivity: 4
-  entropy: 3
-  attributes: 160000000500000002000000040000000100000003000000080000000900000007000000
+  entropy: 1
+  attributes: 0000000002000000feffffff00000000feffffff00000000030000000400000003000000
   i: "\u041F\u0418\u0414\u0410\u0420\u0410\u0421"
   cookingTime: 1
   overcookingTime: 0

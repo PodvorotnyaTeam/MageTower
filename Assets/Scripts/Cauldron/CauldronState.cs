@@ -13,12 +13,12 @@ public class CauldronState : MonoBehaviour
 
     public List<GameObject> failedRecipes;
 
-    private List<Recipes> tempRecipes = new List<Recipes>();
+    public List<Recipes> tempRecipes = new List<Recipes>();
     private List<Recipes> sortRecipes = new List<Recipes>();
 
     [SerializeField]
     private List<GameObject> ingridientsInCauldron = new List<GameObject>();
-    private List<int> attributesInCauldron = new List<int>(new int[9]);
+    public List<int> attributesInCauldron = new List<int> { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
     [SerializeField]
     private GameObject resultPoint;
@@ -59,6 +59,7 @@ public class CauldronState : MonoBehaviour
                         for (int i = 0; i < 9; i++)
                         {
                             attributesInCauldron[i] += ingridient.GetComponent<IngridientStats>().ingridient.attributes[i];
+                            attributesInCauldron[i] = Math.Clamp(attributesInCauldron[i], -10, 10);
                         }
                         ingridientsInCauldron.Remove(ingridient);
                         Destroy(ingridient);
@@ -80,6 +81,11 @@ public class CauldronState : MonoBehaviour
         Debug.Log("Из котла был удалён" + other.name);
     }
 
+    private void RIUpdater()
+    {
+
+    }
+
     public void RecipeMatcher()
     {
         sortRecipes = new List<Recipes>(tempRecipes);
@@ -97,15 +103,11 @@ public class CauldronState : MonoBehaviour
     {
         if (score < 1)
         {
-            Transform epic = i.transform.Find("Rarity/Epic");
-            if (epic != null)
-                epic.gameObject.SetActive(true);
+            i.transform.Find("Rarity/Epic").gameObject.SetActive(true);
         }
         else if (score < 2)
         {
-            Transform rare = i.transform.Find("Rarity/Rare");
-            if (rare != null)
-                rare.gameObject.SetActive(true);
+            i.transform.Find("Rarity/Rare").gameObject.SetActive(true);
         }
     }
 
@@ -175,8 +177,8 @@ public class CauldronState : MonoBehaviour
         }
         else campfire.SoftReset();
         tempRecipes = new List<Recipes>(recipes);
+        attributesInCauldron = new List<int> { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         ingridientsInCauldron.Clear();
-        attributesInCauldron = new List<int>(new int[9]);
         k = 0;
     }
 
