@@ -156,4 +156,33 @@ public class QuestManager : MonoBehaviour
     {
         return completedQuests.Exists(q => q.data.id == questID);
     }
+
+    private void HandlePotionBrewed(Recipes recipe)
+    {
+        foreach (var quest in activeQuests)
+        {
+            foreach (var obj in quest.objectives)
+            {
+                if (obj.data.type == ObjectiveType.CraftPotion &&
+                    obj.data.targetID == recipe.id &&
+                    !obj.isCompleted)
+                {
+                    obj.currentAmount++;
+
+                    if (obj.currentAmount >= obj.data.requiredAmount)
+                    {
+                        obj.isCompleted = true;
+
+                        Debug.Log(
+                            $"Potion objective completed: {recipe.nameRecipe}"
+                        );
+                    }
+
+                    OnQuestUpdated?.Invoke(quest);
+                }
+            }
+
+            CheckQuestCompletion(quest);
+        }
+    }
 }

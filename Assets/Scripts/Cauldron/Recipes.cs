@@ -4,6 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Recipes", menuName = "Alchemy/Recipes")]
 public class Recipes : ScriptableObject
 {
+    public string id;
     public string nameRecipe;
 
     public int tocisity;
