@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: Poison
   m_EditorClassIdentifier: Assembly-CSharp::Recipes
   nameRecipe: "\u042F\u0434"
-  tocisity: 9
-  acidity: 4
-  volatility: 5
-  viscosity: 5
-  thermoactivity: 4
-  vitality: 1
-  conductivity: 3
-  psychoactivity: 1
-  entropy: 1
-  attributes: 090000000300000004000000030000000400000001000000020000000300000003000000
+  tocisity: 6
+  acidity: 0
+  volatility: 0
+  viscosity: 1
+  thermoactivity: 0
+  vitality: -4
+  conductivity: 0
+  psychoactivity: 0
+  entropy: 2
+  attributes: 090000000400000005000000050000000400000001000000030000000100000001000000
   isCommon: 0
   isEpic: 0
   isIdeal: 0

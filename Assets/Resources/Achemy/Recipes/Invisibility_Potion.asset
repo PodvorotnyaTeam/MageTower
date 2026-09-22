@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: Invisibility_Potion
   m_EditorClassIdentifier: Assembly-CSharp::Recipes
   nameRecipe: "\u0417\u0435\u043B\u044C\u0435 \u043D\u0435\u0432\u0438\u0434\u0438\u043C\u043E\u0441\u0442\u0438"
-  tocisity: 6
-  acidity: 4
-  volatility: 9
-  viscosity: 1
-  thermoactivity: 4
-  vitality: 3
-  conductivity: 7
-  psychoactivity: 2
-  entropy: 8
-  attributes: 020000000500000009000000010000000400000003000000070000000200000004000000
+  tocisity: 0
+  acidity: 0
+  volatility: 6
+  viscosity: -4
+  thermoactivity: 0
+  vitality: 0
+  conductivity: 0
+  psychoactivity: 0
+  entropy: 4
+  attributes: 060000000400000009000000010000000400000003000000070000000200000008000000
   isCommon: 0
   isEpic: 0
   isIdeal: 0

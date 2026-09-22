@@ -13,18 +13,18 @@ MonoBehaviour:
   m_Name: Heal_Potion
   m_EditorClassIdentifier: Assembly-CSharp::Recipes
   nameRecipe: "\u0417\u0435\u043B\u044C\u0435 \u043B\u0435\u0447\u0435\u043D\u0438\u044F"
-  tocisity: 1
-  acidity: 3
-  volatility: 5
-  viscosity: 4
-  thermoactivity: 6
-  vitality: 9
-  conductivity: 2
-  psychoactivity: 2
-  entropy: 2
-  attributes: 010000000600000002000000040000000600000009000000020000000100000001000000
+  tocisity: -4
+  acidity: 0
+  volatility: 0
+  viscosity: 0
+  thermoactivity: 0
+  vitality: 6
+  conductivity: 0
+  psychoactivity: 0
+  entropy: 0
+  attributes: 010000000300000005000000040000000600000009000000020000000200000002000000
   isCommon: 0
   isEpic: 0
   isIdeal: 0
-  maxDeviation: 2
+  maxDeviation: 3
   result: {fileID: 310492083331670768, guid: 3a7e502ef0a32e8449664f7276c55944, type: 3}

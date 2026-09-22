@@ -18,7 +18,7 @@ public class CauldronState : MonoBehaviour
 
     [SerializeField]
     private List<GameObject> ingridientsInCauldron = new List<GameObject>();
-    public List<int> attributesInCauldron = new List<int> { 5, 5, 5, 5, 5, 5, 5, 5, 5 };
+    public List<int> attributesInCauldron = new List<int> { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
     [SerializeField]
     private GameObject resultPoint;
@@ -59,6 +59,7 @@ public class CauldronState : MonoBehaviour
                         for (int i = 0; i < 9; i++)
                         {
                             attributesInCauldron[i] += ingridient.GetComponent<IngridientStats>().ingridient.attributes[i];
+                            attributesInCauldron[i] = Math.Clamp(attributesInCauldron[i], -10, 10);
                         }
                         ingridientsInCauldron.Remove(ingridient);
                         Destroy(ingridient);
@@ -158,7 +159,7 @@ public class CauldronState : MonoBehaviour
         }
         else campfire.SoftReset();
         tempRecipes = new List<Recipes>(recipes);
-        attributesInCauldron = new List<int> { 5, 5, 5, 5, 5, 5, 5, 5, 5 };
+        attributesInCauldron = new List<int> { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         ingridientsInCauldron.Clear();
         k = 0;
     }

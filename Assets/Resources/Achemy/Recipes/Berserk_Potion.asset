@@ -13,18 +13,18 @@ MonoBehaviour:
   m_Name: Berserk_Potion
   m_EditorClassIdentifier: Assembly-CSharp::Recipes
   nameRecipe: "\u0417\u0435\u043B\u044C\u0435 \u044F\u0440\u043E\u0441\u0442\u0438"
-  tocisity: 5
-  acidity: 4
-  volatility: 3
-  viscosity: 5
-  thermoactivity: 7
-  vitality: 6
-  conductivity: 8
-  psychoactivity: 6
-  entropy: 9
+  tocisity: -2
+  acidity: 0
+  volatility: 1
+  viscosity: 0
+  thermoactivity: -3
+  vitality: 0
+  conductivity: 0
+  psychoactivity: -6
+  entropy: 0
   attributes: 050000000400000003000000050000000700000006000000080000000600000009000000
   isCommon: 0
   isEpic: 0
   isIdeal: 0
-  maxDeviation: 1
+  maxDeviation: 2
   result: {fileID: 310492083331670768, guid: 0e4b1a88d6472d4418792f8451c87ade, type: 3}
