@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Inventory : MonoBehaviour
 {
     [Header("References")]
-    public Database data;
+    public DatabaseForInventory data;
     public GameObject slotPrefab;
 
     [Header("UI Grids")]
@@ -23,7 +23,6 @@ public class Inventory : MonoBehaviour
     public RectTransform draggingItem;
     public Vector3 dragOffset;
     public Canvas mainCanvas;
-    public EventSystem eventSystem;
 
     // Данные (единственное хранилище)
     private List<ItemSlot> inventorySlots = new List<ItemSlot>();
