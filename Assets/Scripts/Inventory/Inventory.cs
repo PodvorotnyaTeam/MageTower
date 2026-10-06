@@ -10,14 +10,14 @@ public class Inventory : MonoBehaviour
     public GameObject slotPrefab;
 
     [Header("UI Grids")]
-    public Transform inventoryGrid;      // Grid для предметов инвентаря
-    public Transform hotbarGrid;         // Grid для хотбара ВНУТРИ меню
-    public Transform gameHotbarGrid;     // Grid для хотбара ВНЕ меню
+    public Transform inventoryGrid;
+    public Transform hotbarGrid;
+    public Transform gameHotbarGrid;
 
     [Header("Settings")]
     public int inventorySize = 27;
     public int hotbarSize = 9;
-    public int emptyItemId = 0;          // ID пустого предмета в Database
+    public int emptyItemId = 0;
 
     [Header("Drag & Drop")]
     public RectTransform draggingItem;
@@ -29,13 +29,25 @@ public class Inventory : MonoBehaviour
     private List<ItemSlot> hotbarSlots = new List<ItemSlot>();
 
     // UI элементы (два разных представления для хотбара)
-    private List<GameObject> hotbarUISlots = new List<GameObject>();      // UI внутри меню
-    private List<GameObject> gameHotbarUISlots = new List<GameObject>();  // UI вне меню
+    private List<GameObject> hotbarUISlots = new List<GameObject>();
+    private List<GameObject> gameHotbarUISlots = new List<GameObject>();
 
     // Drag & Drop
     private int selectedSlotId = -1;
     private ItemSlot selectedItem;
     private bool isDraggingFromHotbar = false;
+
+    public static Inventory Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -49,6 +61,17 @@ public class Inventory : MonoBehaviour
     {
         if (selectedSlotId != -1)
             DragItem();
+    }
+
+    [Header("Debug")]
+    [Tooltip("Показывать ID цветом и текстом вместо спрайтов")]
+    public bool useDebugColors = true;
+
+    private Color GetColorById(int id)
+    {
+        // Золотое сечение даёт равномерно распределённые оттенки
+        float hue = (id * 0.6180339887f) % 1f;
+        return Color.HSVToRGB(hue, 0.65f, 0.85f);
     }
 
     // ==================== ПУБЛИЧНЫЕ МЕТОДЫ ДЛЯ INPUT СКРИПТА ====================
@@ -175,6 +198,7 @@ public class Inventory : MonoBehaviour
 
     // ==================== UI ОБНОВЛЕНИЕ ====================
 
+    //Временный метод, пока не появились спрайты для айтемов
     private void UpdateSlotUI(ItemSlot slot)
     {
         if (slot.slotObject == null) return;
@@ -182,54 +206,161 @@ public class Inventory : MonoBehaviour
         Image slotImage = slot.slotObject.GetComponent<Image>();
         Text countText = slot.slotObject.GetComponentInChildren<Text>();
 
-        if (slot.itemId == emptyItemId || slot.count <= 0)
+        bool isEmpty = (slot.itemId == emptyItemId || slot.count <= 0);
+
+        if (isEmpty)
         {
-            // Пустой слот - показываем empty иконку
-            if (data != null && data.items.Count > emptyItemId)
-                slotImage.sprite = data.items[emptyItemId].img;
-            else
+            if (slotImage != null)
+            {
+                slotImage.color = Color.white;
+                slotImage.sprite = (data != null && data.items.Count > emptyItemId)
+                    ? data.items[emptyItemId].img
+                    : null;
+            }
+            if (countText != null) countText.text = "";
+            return;
+        }
+
+        if (useDebugColors)
+        {
+            if (slotImage != null)
+            {
                 slotImage.sprite = null;
+                slotImage.color = GetColorById(slot.itemId);
+            }
 
             if (countText != null)
-                countText.text = "";
+            {
+                Debug.Log($"[UpdateSlotUI] slot.itemId={slot.itemId}, slot.count={slot.count}, text={countText.name}");
+
+                countText.supportRichText = true;
+                countText.resizeTextForBestFit = false;
+                // ID на первой строке, количество — на второй. Оба видны всегда.
+                countText.text = $"<size=14>ID:{slot.itemId}</size>\n<size=20>x{slot.count}</size>";
+            }
         }
         else
         {
-            // Слот с предметом
-            if (data != null && data.items.Count > slot.itemId)
-                slotImage.sprite = data.items[slot.itemId].img;
+            if (slotImage != null)
+            {
+                slotImage.color = Color.white;
+                if (data != null && data.items.Count > slot.itemId)
+                    slotImage.sprite = data.items[slot.itemId].img;
+            }
 
             if (countText != null)
                 countText.text = slot.count > 1 ? slot.count.ToString() : "";
         }
     }
+    //private void UpdateSlotUI(ItemSlot slot)
+    //{
+    //    if (slot.slotObject == null) return;
 
+    //    Image slotImage = slot.slotObject.GetComponent<Image>();
+    //    Text countText = slot.slotObject.GetComponentInChildren<Text>();
+
+    //    if (slot.itemId == emptyItemId || slot.count <= 0)
+    //    {
+    //        // Пустой слот - показываем empty иконку
+    //        if (data != null && data.items.Count > emptyItemId)
+    //            slotImage.sprite = data.items[emptyItemId].img;
+    //        else
+    //            slotImage.sprite = null;
+
+    //        if (countText != null)
+    //            countText.text = "";
+    //    }
+    //    else
+    //    {
+    //        // Слот с предметом
+    //        if (data != null && data.items.Count > slot.itemId)
+    //            slotImage.sprite = data.items[slot.itemId].img;
+
+    //        if (countText != null)
+    //            countText.text = slot.count > 1 ? slot.count.ToString() : "";
+    //    }
+    //}
+
+    //Временный метод, пока не появились спрайты для айтемов
     private void UpdateGameHotbarUI()
     {
         for (int i = 0; i < hotbarSize && i < gameHotbarUISlots.Count && i < hotbarSlots.Count; i++)
         {
             var slotData = hotbarSlots[i];
             var uiObject = gameHotbarUISlots[i];
-
             if (uiObject == null) continue;
 
             Image slotImage = uiObject.GetComponent<Image>();
             Text countText = uiObject.GetComponentInChildren<Text>();
 
-            if (slotData.itemId == emptyItemId || slotData.count <= 0)
+            bool isEmpty = (slotData.itemId == emptyItemId || slotData.count <= 0);
+
+            if (isEmpty)
             {
-                if (data != null && data.items.Count > emptyItemId)
-                    slotImage.sprite = data.items[emptyItemId].img;
+                if (slotImage != null)
+                {
+                    slotImage.color = Color.white;
+                    if (data != null && data.items.Count > emptyItemId)
+                        slotImage.sprite = data.items[emptyItemId].img;
+                }
                 if (countText != null) countText.text = "";
+                continue;
+            }
+
+            if (useDebugColors)
+            {
+                if (slotImage != null)
+                {
+                    slotImage.sprite = null;
+                    slotImage.color = GetColorById(slotData.itemId);
+                }
+                if (countText != null)
+                {
+                    countText.supportRichText = true;
+                    string idPart = $"<size=30>ID{slotData.itemId}</size>";
+                    string countPart = slotData.count > 1 ? $"\n{slotData.count}" : "";
+                    countText.text = idPart + countPart;
+                }
             }
             else
             {
-                if (data != null && data.items.Count > slotData.itemId)
-                    slotImage.sprite = data.items[slotData.itemId].img;
-                if (countText != null) countText.text = slotData.count > 1 ? slotData.count.ToString() : "";
+                if (slotImage != null)
+                {
+                    slotImage.color = Color.white;
+                    if (data != null && data.items.Count > slotData.itemId)
+                        slotImage.sprite = data.items[slotData.itemId].img;
+                }
+                if (countText != null)
+                    countText.text = slotData.count > 1 ? slotData.count.ToString() : "";
             }
         }
     }
+    //private void UpdateGameHotbarUI()
+    //{
+    //    for (int i = 0; i < hotbarSize && i < gameHotbarUISlots.Count && i < hotbarSlots.Count; i++)
+    //    {
+    //        var slotData = hotbarSlots[i];
+    //        var uiObject = gameHotbarUISlots[i];
+
+    //        if (uiObject == null) continue;
+
+    //        Image slotImage = uiObject.GetComponent<Image>();
+    //        Text countText = uiObject.GetComponentInChildren<Text>();
+
+    //        if (slotData.itemId == emptyItemId || slotData.count <= 0)
+    //        {
+    //            if (data != null && data.items.Count > emptyItemId)
+    //                slotImage.sprite = data.items[emptyItemId].img;
+    //            if (countText != null) countText.text = "";
+    //        }
+    //        else
+    //        {
+    //            if (data != null && data.items.Count > slotData.itemId)
+    //                slotImage.sprite = data.items[slotData.itemId].img;
+    //            if (countText != null) countText.text = slotData.count > 1 ? slotData.count.ToString() : "";
+    //        }
+    //    }
+    //}
 
     private void UpdateAllUI()
     {
@@ -275,6 +406,29 @@ public class Inventory : MonoBehaviour
                 AddItemToHotbar(randomItem, randomCount);
             }
         }
+    }
+
+    /// <summary>
+    /// Пытается добавить предмет в инвентарь. Если места нет — пробует хотбар.
+    /// Возвращает true, если предмет удалось положить хотя бы частично.
+    /// </summary>
+    public bool TryAddItem(int itemId, int count = 1)
+    {
+        if (itemId == emptyItemId || count <= 0)
+            return false;
+
+        // 1. Пробуем инвентарь
+        if (AddItemToInventory(itemId, count))
+            return true;
+
+        // 2. Если инвентарь полон — пробуем хотбар
+        if (AddItemToHotbar(itemId, count))
+        {
+            UpdateGameHotbarUI();
+            return true;
+        }
+
+        return false;
     }
 
     public bool AddItemToInventory(int itemId, int count)
@@ -351,6 +505,8 @@ public class Inventory : MonoBehaviour
 
     private void SelectSlot(int slotIndex, SlotType type)
     {
+        Debug.Log($"[SelectSlot] index={slotIndex}, type={type}, selectedSlotId={selectedSlotId}");
+
         var slot = GetSlot(type, slotIndex);
 
         if (selectedSlotId == -1)
@@ -363,8 +519,21 @@ public class Inventory : MonoBehaviour
                 isDraggingFromHotbar = (type == SlotType.Hotbar);
 
                 draggingItem.gameObject.SetActive(true);
-                if (data != null && data.items.Count > slot.itemId)
-                    draggingItem.GetComponent<Image>().sprite = data.items[slot.itemId].img;
+
+                //Временно, пока не появились спрайты
+                var dragImage = draggingItem.GetComponent<Image>();
+                if (useDebugColors)
+                {
+                    dragImage.sprite = null;
+                    dragImage.color = GetColorById(slot.itemId);
+                }
+                else if (data != null && data.items.Count > slot.itemId)
+                {
+                    dragImage.color = Color.white;
+                    dragImage.sprite = data.items[slot.itemId].img;
+                }
+                //if (data != null && data.items.Count > slot.itemId)
+                //    draggingItem.GetComponent<Image>().sprite = data.items[slot.itemId].img;
 
                 ClearSlot(slot);
                 UpdateSlotUI(slot);

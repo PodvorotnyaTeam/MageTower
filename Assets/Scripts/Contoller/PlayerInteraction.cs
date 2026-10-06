@@ -28,10 +28,13 @@ public class PlayerInteractor : MonoBehaviour
 
     public void OnInteract()
     {
-        if (!interactAction.action.triggered) return;
+        Debug.Log("[1] OnInteract вызван");
+
+        if (!interactAction.action.triggered) { Debug.Log("[1a] action НЕ triggered"); return; }
 
         if (heldObject != null)
         {
+            Debug.Log("[1b] держим объект -> Drop");
             Drop();
             return;
         }
@@ -40,9 +43,12 @@ public class PlayerInteractor : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, interactDistance))
         {
+            Debug.Log($"[2] hit = {hit.collider.name}");
             var interactable = hit.collider.GetComponent<IInteractable>();
+            Debug.Log($"[3] IInteractable = {(interactable != null ? interactable.GetType().Name : "NULL")}");
             interactable?.Interact(this);
         }
+        else Debug.Log("[2] луч ни во что не попал");
     }
 
     public void OnScroll()
