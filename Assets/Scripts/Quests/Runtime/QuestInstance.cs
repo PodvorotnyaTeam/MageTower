@@ -7,4 +7,5 @@ public class QuestInstance
     public List<ObjectiveInstance> objectives;
     public QuestState state;
     public float startTime;
+    public bool readyToTurnIn;
 }

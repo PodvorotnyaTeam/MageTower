@@ -37,7 +37,7 @@ public class Bucket_behavior : MonoBehaviour, IInteractable
         // Наливаем только пока ведро наклонено и луч бьёт в котёл
         if (!isFull && isTilted && Physics.Raycast(transform.position, Vector3.down, out hit, rayDistance))
         {
-            Debug.Log("Ray is casted");
+            //Debug.Log("Ray is casted");
             if (hit.collider.CompareTag("Cauldron's_bottom"))
             {
                 Debug.Log("Ray hitted");
@@ -51,7 +51,7 @@ public class Bucket_behavior : MonoBehaviour, IInteractable
 
     private bool IsTilted()
     {
-        Debug.Log("is tilted");
+        //Debug.Log("is tilted");
         float currentAngle = Vector3.Angle(transform.up, Vector3.up);
         return currentAngle >= tiltAngleThreshold;
     }

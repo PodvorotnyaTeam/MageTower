@@ -111,6 +111,26 @@ public class CauldronState : MonoBehaviour
         }
     }
 
+    private void SpawnPotionResult(Recipes recipe, double deviation)
+    {
+        if (recipe == null || recipe.result == null)
+        {
+            Debug.LogError("CauldronState: Recipe result is not assigned.");
+            return;
+        }
+
+        GameObject potion = Instantiate(recipe.result, resultPoint.transform);
+        RarityChecker(deviation, potion);
+
+        // Recipes are named after their stable asset IDs (for example,
+        // Heal_Potion). Quest objectives use the same ID.
+        string potionID = string.IsNullOrWhiteSpace(recipe.name)
+            ? recipe.nameRecipe
+            : recipe.name;
+
+        GameEvents.OnPotionCrafted?.Invoke(potionID, 1);
+    }
+
     public void Brew()
     {
         RecipeMatcher();
@@ -124,8 +144,7 @@ public class CauldronState : MonoBehaviour
                     int diff = Mathf.Abs(attributesInCauldron[i] - tempRecipes[0].attributes[i]);
                     deviation += diff / tempRecipes[0].maxDeviation;
                 }
-                GameObject j = Instantiate(tempRecipes[0].result, resultPoint.transform);
-                RarityChecker(deviation, j);
+                SpawnPotionResult(tempRecipes[0], deviation);
             }
             else
             {
@@ -141,8 +160,7 @@ public class CauldronState : MonoBehaviour
                     deviations.Add(deviation);
                 }
                 int index = deviations.IndexOf(deviations.Min());
-                GameObject j = Instantiate(tempRecipes[index].result, resultPoint.transform);
-                RarityChecker(deviations[index], j);
+                SpawnPotionResult(tempRecipes[index], deviations[index]);
             }
         }
         else
