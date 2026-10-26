@@ -13,8 +13,28 @@ public class Spawner : MonoBehaviour, IInteractable
     [SerializeField] private GameObject worldItemPrefab;
     [SerializeField] private Transform spawnLocation;
 
+    [Tooltip("true = spawn worldItemPrefab in the world (ingredient for the cauldron). false = put the item into the inventory.")]
+    [SerializeField] private bool spawnInWorld = true;
+
+    private void SpawnInWorld()
+    {
+        if (worldItemPrefab == null || spawnLocation == null)
+        {
+            Debug.LogWarning($"[Spawner] {name}: worldItemPrefab or spawnLocation is not assigned.");
+            return;
+        }
+
+        Instantiate(worldItemPrefab, spawnLocation);
+    }
+
     public void Interact(PlayerInteractor interactor)
     {
+        if (spawnInWorld)
+        {
+            SpawnInWorld();
+            return;
+        }
+
         Debug.Log($"[4] Spawner.Interact вызван, itemId={itemId}, Instance={(Inventory.Instance != null)}");
 
         // 1. ѕытаемс€ найти инвентарь
