@@ -1121,6 +1121,7 @@ GameObject:
   - component: {fileID: 79096165}
   - component: {fileID: 79096170}
   - component: {fileID: 79096171}
+  - component: {fileID: 79096172}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1307,6 +1308,21 @@ MonoBehaviour:
   dragOffset: {x: 5, y: 5, z: 0}
   mainCanvas: {fileID: 785250092}
   useDebugColors: 1
+--- !u!114 &79096172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 79096163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4a81e5d27b94f0a9e6d3b1f08a7c25e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerPocket
+  interactor: {fileID: 0}
+  inventory: {fileID: 0}
+  pocketKey: 20
 --- !u!1001 &92287594
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4344,7 +4360,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9548fe4ea5bfe147ac64347ee933a1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spawner
-  itemId: 1
+  itemId: 17
   count: 1
   dropIfInventoryFull: 0
   worldItemPrefab: {fileID: 2676300686484746800, guid: c65c2b6f859342f4f80f83dc902a382f, type: 3}

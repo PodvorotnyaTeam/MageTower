@@ -53,7 +53,7 @@ public class Inventory : MonoBehaviour
     {
         InitializeInventoryGrid();
         InitializeHotbarUI();
-        AddTestItems();
+        //AddTestItems(); // random test items, off now that real items exist
         UpdateAllUI();
     }
 
@@ -429,6 +429,54 @@ public class Inventory : MonoBehaviour
         }
 
         return false;
+    }
+
+    // ---- pocket helpers (PlayerPocket)
+
+    public GameObject GetWorldPrefab(int itemId)
+    {
+        if (data == null || itemId <= emptyItemId || itemId >= data.items.Count)
+            return null;
+
+        return data.items[itemId].worldPrefab;
+    }
+
+    // Finds the item id of a world object by the name of the prefab it was made from.
+    public int FindItemIdByWorldObject(GameObject worldObject)
+    {
+        if (data == null || worldObject == null)
+            return emptyItemId;
+
+        string prefabName = System.Text.RegularExpressions.Regex
+            .Replace(worldObject.name, @"(\s*\(Clone\)|\s\(\d+\))+$", "")
+            .Trim();
+
+        for (int i = emptyItemId + 1; i < data.items.Count; i++)
+        {
+            if (data.items[i].worldPrefab != null && data.items[i].worldPrefab.name == prefabName)
+                return i;
+        }
+
+        return emptyItemId;
+    }
+
+    // Takes one item out of the selected hotbar slot and returns its id (emptyItemId if there is none).
+    public int TakeOneFromSelectedHotbarSlot()
+    {
+        ItemSlot slot = GetSelectedHotbarItem();
+
+        if (slot == null || slot.itemId == emptyItemId || slot.count <= 0)
+            return emptyItemId;
+
+        int itemId = slot.itemId;
+        slot.count--;
+
+        if (slot.count <= 0)
+            ClearSlot(slot);
+
+        UpdateSlotUI(slot);
+        UpdateGameHotbarUI();
+        return itemId;
     }
 
     public bool AddItemToInventory(int itemId, int count)

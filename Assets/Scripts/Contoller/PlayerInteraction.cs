@@ -21,6 +21,19 @@ public class PlayerInteractor : MonoBehaviour
 
     float currentHoldDistance = 1.5f;
 
+    public IGrabbable HeldObject => heldObject;
+
+    // Lets go of the held object and hands it over (used to put it in the pocket).
+    public GameObject ReleaseHeld()
+    {
+        if (heldObject == null)
+            return null;
+
+        GameObject released = heldObject.gameObject;
+        Drop();
+        return released;
+    }
+
     void Awake()
     {
         cam = Camera.main; // <-- КЛЮЧЕВО
