@@ -10,6 +10,7 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] private GameObject gameHotbarPanel;
     [SerializeField] private Inventory inventory;
 
+    // True while the inventory or the journal is open.
     public static bool fromInventory = false;
 
     private Control control;
@@ -28,6 +29,7 @@ public class PlayerInputHandler : MonoBehaviour
         panelInventory.SetActive(false);
         panelMagazine.SetActive(false);
         gameHotbarPanel.SetActive(true);
+        UpdateOpenState();
     }
 
     private void OnEnable() => control.Player.Enable();
@@ -46,50 +48,71 @@ public class PlayerInputHandler : MonoBehaviour
         if (!fromInventory)
         {
             OpenGameMenu();
+            return;
         }
-        else
-        {
-            CloseInventory();
-        }
+
+        CloseInventory();
+        CloseMagazine();
     }
 
     private void OnInventoryPressed(InputAction.CallbackContext ctx)
     {
-        if (fromInventory) CloseInventory();
+        if (panelInventory.activeSelf) CloseInventory();
         else OpenInventory();
     }
 
     private void OnMagazinePressed(InputAction.CallbackContext ctx)
     {
-        if (fromInventory) Magazine();
-        else CloseInventory();
+        if (panelMagazine.activeSelf) CloseMagazine();
+        else OpenMagazine();
     }
 
     private void OpenInventory()
     {
-        fromInventory = true;
         panelInventory.SetActive(true);
         if (gameHotbarPanel != null) gameHotbarPanel.SetActive(false);
         if (inventory != null) inventory.OnInventoryOpen();
+        UpdateOpenState();
     }
 
     private void CloseInventory()
     {
-        fromInventory = false;
+        if (!panelInventory.activeSelf) return;
+
         panelInventory.SetActive(false);
-        panelMagazine.SetActive(false);
         if (gameHotbarPanel != null) gameHotbarPanel.SetActive(true);
         if (inventory != null) inventory.OnInventoryClose();
+        UpdateOpenState();
     }
 
+    private void OpenMagazine()
+    {
+        panelMagazine.SetActive(true);
+        UpdateOpenState();
+    }
+
+    private void CloseMagazine()
+    {
+        panelMagazine.SetActive(false);
+        UpdateOpenState();
+    }
+
+    private void UpdateOpenState()
+    {
+        fromInventory = panelInventory.activeSelf || panelMagazine.activeSelf;
+    }
+
+    // Called by UI buttons.
     public void Magazine()
     {
-        panelMagazine.SetActive(!panelMagazine.activeSelf);
+        if (panelMagazine.activeSelf) CloseMagazine();
+        else OpenMagazine();
     }
 
     public void Inventory()
     {
-        panelInventory.SetActive(!panelInventory.activeSelf);
+        if (panelInventory.activeSelf) CloseInventory();
+        else OpenInventory();
     }
 
     private void OpenGameMenu()
