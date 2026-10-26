@@ -15,7 +15,25 @@ public class PlayerInteractor : MonoBehaviour
     public float heldAngularDamping = 10f;
     private float savedLinearDamping;
     private float savedAngularDamping;
+    private float savedMaxAngularVelocity;
     public Transform holdPoint;
+
+    [Header("Rotating a held object")]
+    [Tooltip("Hold this key (or the right mouse button) to tip the held object forward, e.g. to pour the bucket.")]
+    public Key tiltKey = Key.R;
+    [Tooltip("How far the object tips forward while the key is held, in degrees.")]
+    public float maxTiltAngle = 110f;
+    [Tooltip("Degrees per second while the key is held.")]
+    public float tiltSpeed = 140f;
+    [Tooltip("Degrees per second when the key is released and the object straightens up.")]
+    public float straightenSpeed = 220f;
+    [Tooltip("How quickly the held object follows the wanted rotation.")]
+    public float heldRotationSpeed = 8f;
+    [Tooltip("Top spin of a held object, radians per second.")]
+    public float maxHeldAngularSpeed = 10f;
+    [Tooltip("Lets a script (or a test) tip the held object without a key.")]
+    public bool forceTilt;
+    private float tilt;
 
     [SerializeField]
     InputActionReference interactAction;
@@ -69,14 +87,86 @@ public class PlayerInteractor : MonoBehaviour
 
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
-        if (Physics.SphereCast(ray, interactRadius, out RaycastHit hit, interactDistance))
+        var interactable = FindTarget(ray);
+        Debug.Log($"[3] IInteractable = {(interactable != null ? interactable.GetType().Name : "NULL")}");
+        interactable?.Interact(this);
+    }
+
+    // What the player is pointing at. Items win over other things near the crosshair (a sword
+    // lying on the enchanting table, a firecracker on the floor), but nothing is picked through a wall.
+    IInteractable FindTarget(Ray ray)
+    {
+        // 1. the exact ray: the nearest thing that is really there
+        RaycastHit[] rayHits = Physics.RaycastAll(ray, interactDistance);
+        System.Array.Sort(rayHits, (a, b) => a.distance.CompareTo(b.distance));
+
+        IInteractable exact = null;
+        float wall = interactDistance;
+
+        foreach (var rayHit in rayHits)
         {
-            Debug.Log($"[2] hit = {hit.collider.name}");
-            var interactable = hit.collider.GetComponent<IInteractable>();
-            Debug.Log($"[3] IInteractable = {(interactable != null ? interactable.GetType().Name : "NULL")}");
-            interactable?.Interact(this);
+            if (IsShadowTrigger(rayHit.collider))
+                continue;
+
+            exact = rayHit.collider.GetComponent<IInteractable>();
+            wall = rayHit.distance;
+            break;
         }
-        else Debug.Log("[2] луч ни во что не попал");
+
+        if (exact is IGrabbable)
+            return exact;
+
+        // 2. a little aim assist: an item inside the aim radius, not behind the thing the ray hit
+        IInteractable bestItem = null;
+        IInteractable bestOther = null;
+        float bestItemDistance = float.MaxValue;
+        float bestOtherDistance = float.MaxValue;
+
+        foreach (var sphereHit in Physics.SphereCastAll(ray, interactRadius, interactDistance))
+        {
+            if (IsShadowTrigger(sphereHit.collider) || sphereHit.distance > wall + 0.15f)
+                continue;
+
+            var target = sphereHit.collider.GetComponent<IInteractable>();
+
+            if (target == null)
+                continue;
+
+            if (target is IGrabbable)
+            {
+                if (sphereHit.distance < bestItemDistance)
+                {
+                    bestItem = target;
+                    bestItemDistance = sphereHit.distance;
+                }
+            }
+            else if (sphereHit.distance < bestOtherDistance)
+            {
+                bestOther = target;
+                bestOtherDistance = sphereHit.distance;
+            }
+        }
+
+        if (bestItem != null)
+            return bestItem;
+
+        return exact != null ? exact : bestOther;
+    }
+
+    // A trigger volume on top of a solid collider of the same object (the zone above the enchanting
+    // table) must not hide what is inside it.
+    static bool IsShadowTrigger(Collider collider)
+    {
+        if (!collider.isTrigger)
+            return false;
+
+        foreach (var other in collider.GetComponents<Collider>())
+        {
+            if (other != collider && !other.isTrigger)
+                return true;
+        }
+
+        return false;
     }
 
     public void OnScroll()
@@ -97,8 +187,11 @@ public class PlayerInteractor : MonoBehaviour
         heldRb.useGravity = false;
         savedLinearDamping = heldRb.linearDamping;
         savedAngularDamping = heldRb.angularDamping;
+        savedMaxAngularVelocity = heldRb.maxAngularVelocity;
         heldRb.linearDamping = 10f;
         heldRb.angularDamping = heldAngularDamping;
+        heldRb.maxAngularVelocity = maxHeldAngularSpeed;
+        tilt = 0f;
 
         currentHoldDistance = Vector3.Distance(
         cam.transform.position,
@@ -113,6 +206,19 @@ public class PlayerInteractor : MonoBehaviour
         holdPoint.localPosition = new Vector3(0f, 0f, currentHoldDistance);
     }
 
+    bool IsTiltPressed()
+    {
+        if (forceTilt)
+            return true;
+
+        if (PlayerInputHandler.fromInventory)
+            return false;
+
+        bool key = Keyboard.current != null && Keyboard.current[tiltKey].isPressed;
+        bool button = Mouse.current != null && Mouse.current.rightButton.isPressed;
+        return key || button;
+    }
+
     void Update()
     {
         if (heldRb == null) return;
@@ -122,6 +228,10 @@ public class PlayerInteractor : MonoBehaviour
         currentHoldDistance = Mathf.Clamp(currentHoldDistance, minHoldDistance, maxHoldDistance);
         // Update hold point position based on current hold distance
         holdPoint.localPosition = Vector3.forward * currentHoldDistance;
+
+        // Manual rotation: tip the object forward while the key is held, straighten it when released
+        bool pressed = IsTiltPressed();
+        tilt = Mathf.MoveTowards(tilt, pressed ? maxTiltAngle : 0f, (pressed ? tiltSpeed : straightenSpeed) * Time.deltaTime);
     }
     void FixedUpdate()
     {
@@ -129,6 +239,28 @@ public class PlayerInteractor : MonoBehaviour
 
         Vector3 dir = holdPoint.position - heldRb.position;
         heldRb.linearVelocity = Vector3.ClampMagnitude(dir * 20f, maxHoldSpeed);
+
+        // Turn towards the wanted rotation: upright, facing the way the player looks, tipped by 'tilt'.
+        // The object follows smoothly instead of spinning when it bumps into something.
+        Vector3 forward = cam.transform.forward;
+        forward.y = 0f;
+
+        if (forward.sqrMagnitude < 0.0001f)
+            forward = Vector3.forward;
+
+        Quaternion heading = Quaternion.LookRotation(forward.normalized, Vector3.up);
+        Quaternion wanted = Quaternion.AngleAxis(tilt, heading * Vector3.right) * heading;
+
+        Quaternion delta = wanted * Quaternion.Inverse(heldRb.rotation);
+        delta.ToAngleAxis(out float angle, out Vector3 axis);
+
+        if (angle > 180f)
+            angle -= 360f;
+
+        if (float.IsNaN(axis.x) || float.IsInfinity(axis.x) || Mathf.Abs(angle) < 0.01f)
+            heldRb.angularVelocity = Vector3.zero;
+        else
+            heldRb.angularVelocity = Vector3.ClampMagnitude(axis * (angle * Mathf.Deg2Rad * heldRotationSpeed), maxHeldAngularSpeed);
     }
 
     void Drop()
@@ -136,6 +268,8 @@ public class PlayerInteractor : MonoBehaviour
         heldRb.useGravity = true;
         heldRb.linearDamping = savedLinearDamping;
         heldRb.angularDamping = savedAngularDamping;
+        heldRb.maxAngularVelocity = savedMaxAngularVelocity;
+        tilt = 0f;
 
         heldObject = null;
         heldRb = null;

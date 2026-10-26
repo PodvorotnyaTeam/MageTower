@@ -85,6 +85,7 @@ public class Inventory : MonoBehaviour
     // Вызывается, когда инвентарь закрывается
     public void OnInventoryClose()
     {
+        ReturnDraggedItem();
         ClearDragSelection();
     }
 
@@ -707,6 +708,24 @@ public class Inventory : MonoBehaviour
 
         if (targetType == SlotType.Hotbar || isDraggingFromHotbar)
             UpdateGameHotbarUI();
+    }
+
+    // An item that is still on the cursor goes back into the slot it was picked from.
+    private void ReturnDraggedItem()
+    {
+        if (selectedSlotId == -1 || selectedItem == null)
+            return;
+
+        var source = GetSlot(isDraggingFromHotbar ? SlotType.Hotbar : SlotType.Inventory, selectedSlotId);
+
+        if (source.itemId != emptyItemId)
+            return;
+
+        source.itemId = selectedItem.itemId;
+        source.count = selectedItem.count;
+        source.payload = selectedItem.payload;
+        UpdateSlotUI(source);
+        UpdateGameHotbarUI();
     }
 
     private void ClearDragSelection()

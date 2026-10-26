@@ -35,7 +35,9 @@ public class Bucket_behavior : MonoBehaviour, IInteractable
         Debug.DrawRay(transform.position, Vector3.down * rayDistance, isTilted ? Color.green : Color.red);
 
         // Наливаем только пока ведро наклонено и луч бьёт в котёл
-        if (!isFull && isTilted && Physics.Raycast(transform.position, Vector3.down, out hit, rayDistance))
+        // Triggers are ignored: the cauldron's ingredient zone (a trigger) used to be the first thing the
+        // ray hit, so the bucket only poured when it was lowered inside that zone.
+        if (!isFull && isTilted && Physics.Raycast(transform.position, Vector3.down, out hit, rayDistance, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
         {
             //Debug.Log("Ray is casted");
             if (hit.collider.CompareTag("Cauldron's_bottom"))

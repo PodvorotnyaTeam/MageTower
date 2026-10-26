@@ -71,7 +71,7 @@ public class PlayerInputHandler : MonoBehaviour
     {
         panelInventory.SetActive(true);
         if (gameHotbarPanel != null) gameHotbarPanel.SetActive(false);
-        if (inventory != null) inventory.OnInventoryOpen();
+        CurrentInventory?.OnInventoryOpen();
         UpdateOpenState();
     }
 
@@ -81,9 +81,13 @@ public class PlayerInputHandler : MonoBehaviour
 
         panelInventory.SetActive(false);
         if (gameHotbarPanel != null) gameHotbarPanel.SetActive(true);
-        if (inventory != null) inventory.OnInventoryClose();
+        CurrentInventory?.OnInventoryClose();
         UpdateOpenState();
     }
+
+    // The field is not assigned in the scene, so fall back to the scene's inventory.
+    // (global:: because the method Inventory() below hides the class name inside this class)
+    private Inventory CurrentInventory => inventory != null ? inventory : global::Inventory.Instance;
 
     private void OpenMagazine()
     {
