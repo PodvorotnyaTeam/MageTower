@@ -108,7 +108,7 @@ public class PlayerInteractor : MonoBehaviour
             if (IsShadowTrigger(rayHit.collider))
                 continue;
 
-            exact = rayHit.collider.GetComponent<IInteractable>();
+            exact = InteractableOf(rayHit.collider);
             wall = rayHit.distance;
             break;
         }
@@ -127,7 +127,7 @@ public class PlayerInteractor : MonoBehaviour
             if (IsShadowTrigger(sphereHit.collider) || sphereHit.distance > wall + 0.15f)
                 continue;
 
-            var target = sphereHit.collider.GetComponent<IInteractable>();
+            var target = InteractableOf(sphereHit.collider);
 
             if (target == null)
                 continue;
@@ -151,6 +151,24 @@ public class PlayerInteractor : MonoBehaviour
             return bestItem;
 
         return exact != null ? exact : bestOther;
+    }
+
+    // What a collider stands for. A grabbable with a kinematic body cannot be held (it is a display
+    // sample lying in a spawner box), so pointing at it means pointing at the box it belongs to.
+    static IInteractable InteractableOf(Collider collider)
+    {
+        var target = collider.GetComponent<IInteractable>();
+
+        if (target is IGrabbable grabbable
+            && grabbable.TryGetComponent(out Rigidbody body)
+            && body.isKinematic)
+        {
+            return grabbable.transform.parent != null
+                ? grabbable.transform.parent.GetComponentInParent<IInteractable>()
+                : null;
+        }
+
+        return target;
     }
 
     // A trigger volume on top of a solid collider of the same object (the zone above the enchanting
@@ -181,8 +199,17 @@ public class PlayerInteractor : MonoBehaviour
     }
     public void Grab(IGrabbable obj)
     {
+        Rigidbody body = obj.GetComponent<Rigidbody>();
+
+        // a kinematic body cannot be moved by setting its velocity
+        if (body == null || body.isKinematic)
+        {
+            Debug.LogWarning($"[Interactor] {obj.name} cannot be held: its Rigidbody is missing or kinematic.");
+            return;
+        }
+
         heldObject = obj;
-        heldRb = obj.GetComponent<Rigidbody>();
+        heldRb = body;
 
         heldRb.useGravity = false;
         savedLinearDamping = heldRb.linearDamping;
