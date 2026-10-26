@@ -38,6 +38,48 @@ public class EnchantableItem : MonoBehaviour
     public int FreeSlots => runeSlots - enchants.Count;
 
     /// <summary>
+    /// What has to survive when the item goes into the pocket and comes out again.
+    /// </summary>
+    public class SavedState
+    {
+        public int runeSlots;
+        public List<AppliedEnchant> enchants;
+    }
+
+    /// <summary>
+    /// The state to keep, or null for an item that has no enchantments (a plain item can stack).
+    /// </summary>
+    public object CaptureState()
+    {
+        if (enchants.Count == 0)
+            return null;
+
+        return new SavedState { runeSlots = runeSlots, enchants = CopyEnchants(enchants) };
+    }
+
+    public void RestoreState(object saved)
+    {
+        var state = saved as SavedState;
+
+        if (state == null)
+            return;
+
+        runeSlots = state.runeSlots;
+        enchants = CopyEnchants(state.enchants);
+        RefreshVisual();
+    }
+
+    private static List<AppliedEnchant> CopyEnchants(List<AppliedEnchant> source)
+    {
+        var copy = new List<AppliedEnchant>();
+
+        foreach (var enchant in source)
+            copy.Add(new AppliedEnchant { symbol = enchant.symbol, rune = enchant.rune, quality = enchant.quality });
+
+        return copy;
+    }
+
+    /// <summary>
     /// Makes the item glow in the average colour of the symbols on it, so the
     /// player can see the enchantment.
     /// </summary>

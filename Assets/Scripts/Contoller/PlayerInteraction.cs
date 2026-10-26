@@ -7,6 +7,14 @@ public class PlayerInteractor : MonoBehaviour
 
     [Tooltip("Aim tolerance: a thin ray is hard to point at small items such as the firecracker.")]
     public float interactRadius = 0.1f;
+
+    [Header("Held object physics")]
+    [Tooltip("Top speed of a held object, so it cannot be driven into things hard enough to spin wildly.")]
+    public float maxHoldSpeed = 6f;
+    [Tooltip("Rotation damping while the object is held.")]
+    public float heldAngularDamping = 10f;
+    private float savedLinearDamping;
+    private float savedAngularDamping;
     public Transform holdPoint;
 
     [SerializeField]
@@ -44,6 +52,10 @@ public class PlayerInteractor : MonoBehaviour
 
     public void OnInteract()
     {
+        // a menu is open: E belongs to the UI, not to the world behind it
+        if (PlayerInputHandler.fromInventory)
+            return;
+
         Debug.Log("[1] OnInteract вызван");
 
         if (!interactAction.action.triggered) { Debug.Log("[1a] action НЕ triggered"); return; }
@@ -83,7 +95,10 @@ public class PlayerInteractor : MonoBehaviour
         heldRb = obj.GetComponent<Rigidbody>();
 
         heldRb.useGravity = false;
+        savedLinearDamping = heldRb.linearDamping;
+        savedAngularDamping = heldRb.angularDamping;
         heldRb.linearDamping = 10f;
+        heldRb.angularDamping = heldAngularDamping;
 
         currentHoldDistance = Vector3.Distance(
         cam.transform.position,
@@ -113,13 +128,14 @@ public class PlayerInteractor : MonoBehaviour
         if (heldRb == null) return;
 
         Vector3 dir = holdPoint.position - heldRb.position;
-        heldRb.linearVelocity = dir * 20f;
+        heldRb.linearVelocity = Vector3.ClampMagnitude(dir * 20f, maxHoldSpeed);
     }
 
     void Drop()
     {
         heldRb.useGravity = true;
-        heldRb.linearDamping = 0f;
+        heldRb.linearDamping = savedLinearDamping;
+        heldRb.angularDamping = savedAngularDamping;
 
         heldObject = null;
         heldRb = null;

@@ -89,7 +89,15 @@ public class PlayerPocket : MonoBehaviour
             return;
         }
 
-        if (!inventory.AddItemToHotbar(itemId, 1) && !inventory.AddItemToInventory(itemId, 1))
+        // An enchanted item keeps its enchantments: they travel with the slot.
+        EnchantableItem enchantable = held.GetComponent<EnchantableItem>();
+        object payload = enchantable != null ? enchantable.CaptureState() : null;
+
+        bool stored = payload != null
+            ? inventory.AddItemWithPayload(itemId, payload)
+            : inventory.AddItemToHotbar(itemId, 1) || inventory.AddItemToInventory(itemId, 1);
+
+        if (!stored)
         {
             Debug.Log("[Pocket] No room in the hotbar or the inventory.");
             return;
@@ -115,9 +123,20 @@ public class PlayerPocket : MonoBehaviour
             return;
         }
 
+        object payload = slot.payload;
+
         inventory.TakeOneFromSelectedHotbarSlot();
 
         GameObject item = Instantiate(prefab, interactor.holdPoint.position, interactor.holdPoint.rotation);
+
+        if (payload != null)
+        {
+            EnchantableItem enchantable = item.GetComponent<EnchantableItem>();
+
+            if (enchantable != null)
+                enchantable.RestoreState(payload);
+        }
+
         IGrabbable grabbable = item.GetComponent<IGrabbable>();
 
         if (grabbable == null)

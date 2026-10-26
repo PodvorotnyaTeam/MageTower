@@ -243,7 +243,7 @@ public class Inventory : MonoBehaviour
         {
             if (slotImage != null)
             {
-                slotImage.color = Color.white;
+                slotImage.color = slot.payload != null ? new Color(1f, 0.75f, 0.4f) : Color.white;
                 if (data != null && data.items.Count > slot.itemId)
                     slotImage.sprite = data.items[slot.itemId].img;
             }
@@ -326,7 +326,7 @@ public class Inventory : MonoBehaviour
             {
                 if (slotImage != null)
                 {
-                    slotImage.color = Color.white;
+                    slotImage.color = slotData.payload != null ? new Color(1f, 0.75f, 0.4f) : Color.white;
                     if (data != null && data.items.Count > slotData.itemId)
                         slotImage.sprite = data.items[slotData.itemId].img;
                 }
@@ -377,6 +377,7 @@ public class Inventory : MonoBehaviour
     {
         slot.itemId = emptyItemId;
         slot.count = 0;
+        slot.payload = null;
     }
 
     // ==================== ДОБАВЛЕНИЕ ПРЕДМЕТОВ ====================
@@ -479,12 +480,44 @@ public class Inventory : MonoBehaviour
         return itemId;
     }
 
+    // Puts one item that carries its own state into an empty hotbar slot, or an empty
+    // inventory slot. Such items never stack.
+    public bool AddItemWithPayload(int itemId, object payload)
+    {
+        for (int i = 0; i < hotbarSize; i++)
+        {
+            if (hotbarSlots[i].itemId == emptyItemId)
+            {
+                hotbarSlots[i].itemId = itemId;
+                hotbarSlots[i].count = 1;
+                hotbarSlots[i].payload = payload;
+                UpdateSlotUI(hotbarSlots[i]);
+                UpdateGameHotbarUI();
+                return true;
+            }
+        }
+
+        for (int i = 0; i < inventorySize; i++)
+        {
+            if (inventorySlots[i].itemId == emptyItemId)
+            {
+                inventorySlots[i].itemId = itemId;
+                inventorySlots[i].count = 1;
+                inventorySlots[i].payload = payload;
+                UpdateSlotUI(inventorySlots[i]);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public bool AddItemToInventory(int itemId, int count)
     {
         // Сначала ищем существующие стаки
         for (int i = 0; i < inventorySize; i++)
         {
-            if (inventorySlots[i].itemId == itemId && inventorySlots[i].count < 64)
+            if (inventorySlots[i].itemId == itemId && inventorySlots[i].count < 64 && inventorySlots[i].payload == null)
             {
                 int remaining = AddToSlot(i, SlotType.Inventory, count);
                 if (remaining == 0) return true;
@@ -511,7 +544,7 @@ public class Inventory : MonoBehaviour
     {
         for (int i = 0; i < hotbarSize; i++)
         {
-            if (hotbarSlots[i].itemId == itemId && hotbarSlots[i].count < 64)
+            if (hotbarSlots[i].itemId == itemId && hotbarSlots[i].count < 64 && hotbarSlots[i].payload == null)
             {
                 int remaining = AddToSlot(i, SlotType.Hotbar, count);
                 if (remaining == 0) return true;
@@ -597,7 +630,7 @@ public class Inventory : MonoBehaviour
             {
                 MoveToEmptySlot(slot, type);
             }
-            else if (slot.itemId == selectedItem.itemId)
+            else if (slot.itemId == selectedItem.itemId && slot.payload == null && selectedItem.payload == null)
             {
                 MergeIntoSlot(slot, type);
             }
@@ -614,6 +647,7 @@ public class Inventory : MonoBehaviour
     {
         targetSlot.itemId = selectedItem.itemId;
         targetSlot.count = selectedItem.count;
+        targetSlot.payload = selectedItem.payload;
         UpdateSlotUI(targetSlot);
 
         if (targetType == SlotType.Hotbar || isDraggingFromHotbar)
@@ -659,6 +693,7 @@ public class Inventory : MonoBehaviour
 
         targetSlot.itemId = selectedItem.itemId;
         targetSlot.count = selectedItem.count;
+        targetSlot.payload = selectedItem.payload;
         UpdateSlotUI(targetSlot);
 
         var sourceSlot = GetSlot(
@@ -667,6 +702,7 @@ public class Inventory : MonoBehaviour
         );
         sourceSlot.itemId = tempSlot.itemId;
         sourceSlot.count = tempSlot.count;
+        sourceSlot.payload = tempSlot.payload;
         UpdateSlotUI(sourceSlot);
 
         if (targetType == SlotType.Hotbar || isDraggingFromHotbar)
@@ -698,6 +734,7 @@ public class Inventory : MonoBehaviour
         {
             itemId = original.itemId,
             count = original.count,
+            payload = original.payload,
             slotObject = original.slotObject,
             slotIndex = original.slotIndex,
             type = original.type
@@ -716,6 +753,10 @@ public class ItemSlot
 {
     public int itemId;
     public int count;
+
+    // State of a single item that must survive the trip through the inventory
+    // (an enchanted sword). A slot with a payload never stacks.
+    public object payload;
     public GameObject slotObject;
     public int slotIndex;
     public SlotType type;
