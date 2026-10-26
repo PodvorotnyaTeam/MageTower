@@ -15,73 +15,97 @@ MonoBehaviour:
   items:
   - id: 0
     name: empty
-    img: {fileID: 0}
+    img: {fileID: 21300000, guid: 673ac1c71976a2e429bfeb2e339e2066, type: 3}
     worldPrefab: {fileID: 0}
   - id: 1
     name: Pulmonaria
-    img: {fileID: 0}
+    img: {fileID: 21300000, guid: ed3175b1b8ce5f6488d413bf9b243893, type: 3}
     worldPrefab: {fileID: 7677023989493651163, guid: 5c7bd56b5199d7348944231d03feb4da, type: 3}
   - id: 2
     name: Pinecone
-    img: {fileID: 0}
+    img: {fileID: 21300000, guid: 3df9bfb0a8008974fbcd94ad6ed28559, type: 3}
     worldPrefab: {fileID: 5462978138148315582, guid: 06cc084b0c364d14dbd4de4cc6379c42, type: 3}
   - id: 3
     name: Chamomile
-    img: {fileID: 0}
+    img: {fileID: 21300000, guid: 486eba4d605b8a14dab153e0024f7daf, type: 3}
     worldPrefab: {fileID: 7677023989493651163, guid: ddea40e83ac30e4479112ab57ee9c673, type: 3}
   - id: 4
     name: Thunder_Crumb
-    img: {fileID: 0}
+    img: {fileID: 21300000, guid: 2e51eefedae50ec44b08a3d31188f014, type: 3}
     worldPrefab: {fileID: 7677023989493651163, guid: 37fbbbca122e0f64bb61799f80b11833, type: 3}
   - id: 5
     name: Pistol_Shrimp_Eye
-    img: {fileID: 0}
+    img: {fileID: 21300000, guid: 86987d91c519ee944904684da7d9d0f8, type: 3}
     worldPrefab: {fileID: 7677023989493651163, guid: 77c1d58be6a0c1d43b9974655105010e, type: 3}
   - id: 6
     name: Ash
-    img: {fileID: 0}
+    img: {fileID: 21300000, guid: c37b688e7deb9204fa99e8cf83734c65, type: 3}
     worldPrefab: {fileID: 7677023989493651163, guid: f71f49cbceb97834f90497878f14df57, type: 3}
   - id: 7
     name: Iron_Shavings
-    img: {fileID: 0}
+    img: {fileID: 21300000, guid: 7c8e804de71a2a642a72c4ac063cd91b, type: 3}
     worldPrefab: {fileID: 7677023989493651163, guid: f28c7526e7dcd2e4cb49d2dc06bb33b2, type: 3}
   - id: 8
     name: Delbiscus_Flowers
-    img: {fileID: 0}
+    img: {fileID: 21300000, guid: 3d1eda0df18f6a44285feed2441f1d7a, type: 3}
     worldPrefab: {fileID: 7677023989493651163, guid: 9aff40879a95ef34da9aa286f9d78225, type: 3}
   - id: 9
     name: Mana_Stone
-    img: {fileID: 0}
+    img: {fileID: 21300000, guid: 15adce48d3097c9429a56954455edd30, type: 3}
     worldPrefab: {fileID: 7677023989493651163, guid: 64a7e17a0ba50e844a02c1ef33256c95, type: 3}
   - id: 10
     name: Roc_Claw
-    img: {fileID: 0}
+    img: {fileID: 21300000, guid: a9c6abf85c9cd86449d80bbc39e73152, type: 3}
     worldPrefab: {fileID: 7677023989493651163, guid: da0a64ac4c184ec428f2407d16849f5d, type: 3}
   - id: 11
     name: Vulcanid_Shell
-    img: {fileID: 0}
+    img: {fileID: 21300000, guid: 48242eae64761e94fa6bf4741d254628, type: 3}
     worldPrefab: {fileID: 7677023989493651163, guid: fd9fc88c989c12f44a27e504c5529568, type: 3}
   - id: 12
     name: Na-El_Pollen
-    img: {fileID: 0}
+    img: {fileID: 21300000, guid: 36866a55e74723146a3caf91b3aae7df, type: 3}
     worldPrefab: {fileID: 7677023989493651163, guid: 4d5fb117351ac164ba15a8d3653f2fb1, type: 3}
   - id: 13
     name: Ice_Crystals_of_the_Ekirs
-    img: {fileID: 0}
+    img: {fileID: 21300000, guid: fc909fd32d85c0f4b87ce2d838610e91, type: 3}
     worldPrefab: {fileID: 7677023989493651163, guid: 4937a2ee10037ee459cb86842cc9d62b, type: 3}
   - id: 14
     name: Glittering_Vine_Powder
-    img: {fileID: 0}
+    img: {fileID: 21300000, guid: 3ffd4ce37cfc30d448caaab35e8b18b8, type: 3}
     worldPrefab: {fileID: 7677023989493651163, guid: e405a738e653727429aff28752eff8d5, type: 3}
   - id: 15
     name: Frozen_Dragon_Eye
-    img: {fileID: 0}
+    img: {fileID: 21300000, guid: f7df53c7c8c79f94f861bb740980ad64, type: 3}
     worldPrefab: {fileID: 7677023989493651163, guid: 6f8fda671cc42034bbcd9062f0d2e0d5, type: 3}
   - id: 16
     name: Shape-shifting_Tonka_Beans
-    img: {fileID: 0}
+    img: {fileID: 21300000, guid: fa68460283004e646a2569ca888dd22a, type: 3}
     worldPrefab: {fileID: 7677023989493651163, guid: 7bc68e9801e6f5b429f92cfc589f327c, type: 3}
   - id: 17
     name: Plank
-    img: {fileID: 0}
+    img: {fileID: 21300000, guid: 95bea87e65f40ab43b2103119d2e826c, type: 3}
     worldPrefab: {fileID: 2676300686484746800, guid: c65c2b6f859342f4f80f83dc902a382f, type: 3}
+  - id: 18
+    name: Stencil_Fire
+    img: {fileID: 21300000, guid: 74466c9a7a2b88e469eb9743d5a868ab, type: 3}
+    worldPrefab: {fileID: 6181774425297770388, guid: 3e82e7e396aac6b4587df5391496345c, type: 3}
+  - id: 19
+    name: Stencil_Ice
+    img: {fileID: 21300000, guid: f39ab2f67914a374d931ba4fe5ab2299, type: 3}
+    worldPrefab: {fileID: 1801858482007669137, guid: 7b1b7db6938925c42a96b3c3bbf3782b, type: 3}
+  - id: 20
+    name: Stencil_Lightning
+    img: {fileID: 21300000, guid: 5c593512a4c977a41843cb8680f7f574, type: 3}
+    worldPrefab: {fileID: 7247372071285238534, guid: 253f8b914e51e2743ae5353003350dbc, type: 3}
+  - id: 21
+    name: Rune_Iron
+    img: {fileID: 21300000, guid: 3ce2f1dc1a89c7a4a99cac09bd1f7172, type: 3}
+    worldPrefab: {fileID: 1858758989546836857, guid: ab81f25d27d33eb448009149a41cf810, type: 3}
+  - id: 22
+    name: Rune_Electrolyte
+    img: {fileID: 21300000, guid: 34072a88789b82e47aad2b1432943171, type: 3}
+    worldPrefab: {fileID: 3659220859499830852, guid: b573421285eb2564f99731e0cc4f9456, type: 3}
+  - id: 23
+    name: Sword_Test
+    img: {fileID: 21300000, guid: f87246c836e6c434bb4c0e6064d77b17, type: 3}
+    worldPrefab: {fileID: 7828415125606247993, guid: 9dc393d4a5a9ca9479881b707aff7439, type: 3}

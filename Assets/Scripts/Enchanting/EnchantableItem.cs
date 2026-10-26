@@ -38,6 +38,37 @@ public class EnchantableItem : MonoBehaviour
     public int FreeSlots => runeSlots - enchants.Count;
 
     /// <summary>
+    /// Makes the item glow in the average colour of the symbols on it, so the
+    /// player can see the enchantment.
+    /// </summary>
+    public void RefreshVisual()
+    {
+        Renderer itemRenderer = GetComponentInChildren<Renderer>();
+
+        if (itemRenderer == null || enchants.Count == 0)
+            return;
+
+        Color sum = Color.black;
+        int count = 0;
+
+        foreach (var enchant in enchants)
+        {
+            if (enchant.symbol == null)
+                continue;
+
+            sum += enchant.symbol.color;
+            count++;
+        }
+
+        if (count == 0)
+            return;
+
+        Material material = itemRenderer.material;
+        material.EnableKeyword("_EMISSION");
+        material.SetColor("_EmissionColor", sum / count * 1.5f);
+    }
+
+    /// <summary>
     /// The blacksmith adds a slot to gear that has none left.
     /// </summary>
     public bool TryAddRuneSlot(int maxSlots)

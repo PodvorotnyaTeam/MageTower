@@ -15,3 +15,4 @@ MonoBehaviour:
   id: fire
   displayName: "\u041E\u0433\u043E\u043D\u044C"
   effectID: fire
+  color: {r: 1, g: 0.4, b: 0.1, a: 1}

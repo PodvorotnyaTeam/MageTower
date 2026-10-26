@@ -4,6 +4,9 @@ using UnityEngine.InputSystem;
 public class PlayerInteractor : MonoBehaviour
 {
     public float interactDistance = 3f;
+
+    [Tooltip("Aim tolerance: a thin ray is hard to point at small items such as the firecracker.")]
+    public float interactRadius = 0.1f;
     public Transform holdPoint;
 
     [SerializeField]
@@ -54,7 +57,7 @@ public class PlayerInteractor : MonoBehaviour
 
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
-        if (Physics.Raycast(ray, out RaycastHit hit, interactDistance))
+        if (Physics.SphereCast(ray, interactRadius, out RaycastHit hit, interactDistance))
         {
             Debug.Log($"[2] hit = {hit.collider.name}");
             var interactable = hit.collider.GetComponent<IInteractable>();

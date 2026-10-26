@@ -15,3 +15,4 @@ MonoBehaviour:
   id: lightning
   displayName: "\u041C\u043E\u043B\u043D\u0438\u044F"
   effectID: lightning
+  color: {r: 1, g: 0.9, b: 0.2, a: 1}

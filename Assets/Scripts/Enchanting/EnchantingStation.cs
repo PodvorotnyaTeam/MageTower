@@ -56,6 +56,18 @@ public class EnchantingStation : MonoBehaviour, IInteractable
         runes.Remove(runeItem);
         Destroy(stencil.gameObject);
         Destroy(runeItem.gameObject);
+
+        LogEffects(item);
+    }
+
+    private void LogEffects(EnchantableItem item)
+    {
+        var parts = new List<string>();
+
+        foreach (var effect in EnchantingService.Evaluate(item, synergies))
+            parts.Add($"{effect.Key} {effect.Value:0.#}");
+
+        Debug.Log($"EnchantingStation: {item.name} now has [{string.Join(", ", parts)}], free slots: {item.FreeSlots}");
     }
 
     // Replace with the result of the shadow mini-game when it exists.

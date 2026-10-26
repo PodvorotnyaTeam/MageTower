@@ -35,6 +35,8 @@ public static class EnchantingService
 
         Debug.Log($"Enchant applied: {item.ItemID} <- {symbol.id} on {rune.id}");
 
+        item.RefreshVisual();
+
         GameEvents.OnItemEnchanted?.Invoke(item.ItemID, symbol.id);
 
         return true;

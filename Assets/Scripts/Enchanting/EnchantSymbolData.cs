@@ -11,4 +11,7 @@ public class EnchantSymbolData : ScriptableObject
 
     [Tooltip("Effect the symbol gives to the item on its own (e.g. fire).")]
     public string effectID;
+
+    [Tooltip("The item glows in this colour once the symbol is on it.")]
+    public Color color = Color.white;
 }

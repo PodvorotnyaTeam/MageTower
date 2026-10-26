@@ -15,3 +15,4 @@ MonoBehaviour:
   id: ice
   displayName: "\u041B\u0451\u0434"
   effectID: ice
+  color: {r: 0.5, g: 0.85, b: 1, a: 1}
