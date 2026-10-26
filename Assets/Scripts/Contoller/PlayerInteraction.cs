@@ -11,7 +11,7 @@ public class PlayerInteractor : MonoBehaviour
     [SerializeField]
     InputActionReference scrollAction;
     Camera cam;
-
+    int layerMask;
     IGrabbable heldObject;
     Rigidbody heldRb;
 
@@ -23,6 +23,7 @@ public class PlayerInteractor : MonoBehaviour
 
     void Awake()
     {
+        layerMask = ~((1 << 2) | (1 << 4));
         cam = Camera.main; // <-- КЛЮЧЕВО
     }
 
@@ -32,15 +33,30 @@ public class PlayerInteractor : MonoBehaviour
 
         if (heldObject != null)
         {
+            var heldBox = (heldObject as MonoBehaviour)?.GetComponent<MageTower.Shop.DeliveryBox>();
+            if (heldBox != null)
+            {
+                Drop();
+                heldBox.Interact(this);
+                return;
+            }
+
             Drop();
             return;
         }
 
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
-        if (Physics.Raycast(ray, out RaycastHit hit, interactDistance))
+        if (Physics.Raycast(ray, out RaycastHit hit, interactDistance, layerMask, QueryTriggerInteraction.Ignore))
         {
-            var interactable = hit.collider.GetComponent<IInteractable>();
+            var deliveryBox = hit.collider.GetComponentInParent<MageTower.Shop.DeliveryBox>();
+            if (deliveryBox != null)
+            {
+                deliveryBox.Interact(this);
+                return;
+            }
+
+            var interactable = hit.collider.GetComponentInParent<IInteractable>();
             interactable?.Interact(this);
         }
     }

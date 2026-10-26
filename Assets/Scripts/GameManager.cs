@@ -1,4 +1,5 @@
-using UnityEngine;
+п»їusing UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -10,12 +11,12 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        // Проверяем, нужно ли показывать GameMenu
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ GameMenu
         if (fromGame)
         {
             panelSettings.SetActive(false);
             panelGameMenu.SetActive(true);
-            fromGame = false; // Сбрасываем флаг
+            fromGame = false; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
         }
         else
         {
@@ -26,7 +27,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             panelSettings.SetActive(false);
         }
@@ -38,7 +39,7 @@ public class GameManager : MonoBehaviour
     }
     public void BackToMenuFromGame()
     {
-        fromGame = true; // Устанавливаем флаг перед загрузкой меню
+        fromGame = true; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -59,7 +60,7 @@ public class GameManager : MonoBehaviour
 
     public void Exit()
     {
-        Debug.Log("Вы вышли из игры");
+        Debug.Log("пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ");
         Application.Quit();
     }
 }

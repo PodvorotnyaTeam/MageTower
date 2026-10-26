@@ -1,7 +1,8 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class Inventory : MonoBehaviour
 {
@@ -10,14 +11,14 @@ public class Inventory : MonoBehaviour
     public GameObject slotPrefab;
 
     [Header("UI Grids")]
-    public Transform inventoryGrid;      // Grid для предметов инвентаря
-    public Transform hotbarGrid;         // Grid для хотбара ВНУТРИ меню
-    public Transform gameHotbarGrid;     // Grid для хотбара ВНЕ меню
+    public Transform inventoryGrid;      // Grid пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    public Transform hotbarGrid;         // Grid пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+    public Transform gameHotbarGrid;     // Grid пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
 
     [Header("Settings")]
     public int inventorySize = 27;
     public int hotbarSize = 9;
-    public int emptyItemId = 0;          // ID пустого предмета в Database
+    public int emptyItemId = 0;          // ID пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ Database
 
     [Header("Drag & Drop")]
     public RectTransform draggingItem;
@@ -25,13 +26,13 @@ public class Inventory : MonoBehaviour
     public Canvas mainCanvas;
     public EventSystem eventSystem;
 
-    // Данные (единственное хранилище)
+    // пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
     private List<ItemSlot> inventorySlots = new List<ItemSlot>();
     private List<ItemSlot> hotbarSlots = new List<ItemSlot>();
 
-    // UI элементы (два разных представления для хотбара)
-    private List<GameObject> hotbarUISlots = new List<GameObject>();      // UI внутри меню
-    private List<GameObject> gameHotbarUISlots = new List<GameObject>();  // UI вне меню
+    // UI пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+    private List<GameObject> hotbarUISlots = new List<GameObject>();      // UI пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+    private List<GameObject> gameHotbarUISlots = new List<GameObject>();  // UI пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
 
     // Drag & Drop
     private int selectedSlotId = -1;
@@ -52,31 +53,31 @@ public class Inventory : MonoBehaviour
             DragItem();
     }
 
-    // ==================== ПУБЛИЧНЫЕ МЕТОДЫ ДЛЯ INPUT СКРИПТА ====================
+    // ==================== пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ INPUT пїЅпїЅпїЅпїЅпїЅпїЅпїЅ ====================
 
-    // Вызывается, когда инвентарь открывается
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     public void OnInventoryOpen()
     {
         UpdateAllUI();
     }
 
-    // Вызывается, когда инвентарь закрывается
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     public void OnInventoryClose()
     {
         ClearDragSelection();
     }
 
-    // Обновить игровой хотбар (вызывать при добавлении/удалении предметов)
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ/пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
     public void RefreshGameHotbar()
     {
         UpdateGameHotbarUI();
     }
 
-    // Получить предмет из выбранного слота хотбара (для использования)
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
     public ItemSlot GetSelectedHotbarItem()
     {
-        // Возвращает выбранный предмет (слот 0 по умолчанию или по индексу)
-        // Твоя логика выбора слота может быть отдельно
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ 0 пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+        // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         for (int i = 0; i < hotbarSize; i++)
         {
             var outline = gameHotbarUISlots[i]?.GetComponent<Outline>();
@@ -86,7 +87,7 @@ public class Inventory : MonoBehaviour
         return null;
     }
 
-    // Установить выбранный слот хотбара (по индексу)
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
     public void SetSelectedHotbarSlot(int index)
     {
         for (int i = 0; i < gameHotbarUISlots.Count; i++)
@@ -97,7 +98,7 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    // ==================== ИНИЦИАЛИЗАЦИЯ ====================
+    // ==================== пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ====================
 
     private void InitializeInventoryGrid()
     {
@@ -125,7 +126,7 @@ public class Inventory : MonoBehaviour
 
     private void InitializeHotbarUI()
     {
-        // 1. ХОТБАР ВНУТРИ МЕНЮ
+        // 1. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
         for (int i = 0; i < hotbarSize; i++)
         {
             GameObject slot = Instantiate(slotPrefab, hotbarGrid);
@@ -148,7 +149,7 @@ public class Inventory : MonoBehaviour
             hotbarUISlots.Add(slot);
         }
 
-        // 2. ХОТБАР ВНЕ МЕНЮ (только UI, данные из hotbarSlots)
+        // 2. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅ UI, пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ hotbarSlots)
         if (gameHotbarGrid != null)
         {
             for (int i = 0; i < hotbarSize; i++)
@@ -167,14 +168,14 @@ public class Inventory : MonoBehaviour
 
     private void SelectGameHotbarSlot(int index)
     {
-        // Логика клика по игровому хотбару (вне меню)
-        Debug.Log($"Клик по игровому хотбару, слот {index}");
+        // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ)
+        Debug.Log($"пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ {index}");
         SetSelectedHotbarSlot(index);
 
-        // Здесь можно добавить использование предмета по двойному клику и т.д.
+        // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅ.пїЅ.
     }
 
-    // ==================== UI ОБНОВЛЕНИЕ ====================
+    // ==================== UI пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ====================
 
     private void UpdateSlotUI(ItemSlot slot)
     {
@@ -185,7 +186,7 @@ public class Inventory : MonoBehaviour
 
         if (slot.itemId == emptyItemId || slot.count <= 0)
         {
-            // Пустой слот - показываем empty иконку
+            // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ empty пїЅпїЅпїЅпїЅпїЅпїЅ
             if (data != null && data.items.Count > emptyItemId)
                 slotImage.sprite = data.items[emptyItemId].img;
             else
@@ -196,7 +197,7 @@ public class Inventory : MonoBehaviour
         }
         else
         {
-            // Слот с предметом
+            // пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             if (data != null && data.items.Count > slot.itemId)
                 slotImage.sprite = data.items[slot.itemId].img;
 
@@ -249,13 +250,13 @@ public class Inventory : MonoBehaviour
         slot.count = 0;
     }
 
-    // ==================== ДОБАВЛЕНИЕ ПРЕДМЕТОВ ====================
+    // ==================== пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ====================
 
     private void AddTestItems()
     {
         if (data == null) return;
 
-        // Добавляем тестовые предметы в инвентарь
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         for (int i = 0; i < inventorySize / 3; i++)
         {
             if (data.items.Count > 1)
@@ -266,7 +267,7 @@ public class Inventory : MonoBehaviour
             }
         }
 
-        // Добавляем тестовые предметы в хотбар
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
         for (int i = 0; i < hotbarSize / 2; i++)
         {
             if (data.items.Count > 1)
@@ -280,7 +281,7 @@ public class Inventory : MonoBehaviour
 
     public bool AddItemToInventory(int itemId, int count)
     {
-        // Сначала ищем существующие стаки
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
         for (int i = 0; i < inventorySize; i++)
         {
             if (inventorySlots[i].itemId == itemId && inventorySlots[i].count < 64)
@@ -291,7 +292,7 @@ public class Inventory : MonoBehaviour
             }
         }
 
-        // Ищем пустые слоты
+        // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
         for (int i = 0; i < inventorySize; i++)
         {
             if (inventorySlots[i].itemId == emptyItemId)
@@ -348,7 +349,7 @@ public class Inventory : MonoBehaviour
         return count - toAdd;
     }
 
-    // ==================== ЛОГИКА ПЕРЕМЕЩЕНИЯ ====================
+    // ==================== пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ====================
 
     private void SelectSlot(int slotIndex, SlotType type)
     {
@@ -356,7 +357,7 @@ public class Inventory : MonoBehaviour
 
         if (selectedSlotId == -1)
         {
-            // ВЗЯТЬ предмет
+            // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             if (slot.itemId != emptyItemId && slot.count > 0)
             {
                 selectedSlotId = slotIndex;
@@ -376,7 +377,7 @@ public class Inventory : MonoBehaviour
         }
         else
         {
-            // ПОЛОЖИТЬ предмет
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             if (slot.itemId == emptyItemId)
             {
                 MoveToEmptySlot(slot, type);
@@ -466,10 +467,11 @@ public class Inventory : MonoBehaviour
 
     private void DragItem()
     {
-        draggingItem.position = Input.mousePosition + dragOffset;
+        Vector3 mousePos = Mouse.current != null ? (Vector3)Mouse.current.position.ReadValue() : Vector3.zero;
+        draggingItem.position = mousePos + dragOffset;
     }
 
-    // ==================== HELPER МЕТОДЫ ====================
+    // ==================== HELPER пїЅпїЅпїЅпїЅпїЅпїЅ ====================
 
     private ItemSlot GetSlot(SlotType type, int index)
     {

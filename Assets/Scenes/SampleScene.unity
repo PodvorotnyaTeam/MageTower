@@ -1404,11 +1404,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-<<<<<<< HEAD
-  - {fileID: 2100000, guid: 7bd36180f3c66e649be39cd9634ecf4d, type: 2}
-=======
   - {fileID: 2100000, guid: dde92a3e15bfeaf478d2097f9a7407a3, type: 2}
->>>>>>> remotes/origin/develop
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

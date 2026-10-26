@@ -1,4 +1,5 @@
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class GameInputHandler : MonoBehaviour
@@ -20,6 +21,11 @@ public class GameInputHandler : MonoBehaviour
 
     private void Update()
     {
+        // Блокировка клавиш инвентаря и меню, пока игрок читает книгу заказов
+        if (MageTower.Shop.BookStation.IsAnyBookOpen)
+            return;
+
+        
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (!fromInventory)
