@@ -128,6 +128,11 @@ public class CauldronState : MonoBehaviour
             ? recipe.nameRecipe
             : recipe.name;
 
+        QuestItem questItem = potion.GetComponent<QuestItem>();
+        if (questItem == null)
+            questItem = potion.AddComponent<QuestItem>();
+        questItem.itemID = potionID;
+
         GameEvents.OnPotionCrafted?.Invoke(potionID, 1);
     }
 
