@@ -1041,6 +1041,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5b7cffbc6cc7f04e93ae1ee7234303b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IGrabbable
+  angularDamping: 3
+  maxAngularSpeed: 4
+  linearDamping: 0.1
 --- !u!54 &66674641
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1160,7 +1163,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteractor
   interactDistance: 3
   interactRadius: 0.1
+  maxHoldSpeed: 6
+  heldAngularDamping: 10
   holdPoint: {fileID: 1587440755}
+  tiltKey: 32
+  maxTiltAngle: 110
+  tiltSpeed: 140
+  straightenSpeed: 220
+  heldRotationSpeed: 8
+  maxHeldAngularSpeed: 10
+  forceTilt: 0
   interactAction: {fileID: 2085996103881200011, guid: bb6192378c7971c4fa20ca90c0c3210e, type: 3}
   scrollAction: {fileID: 4043219178762006121, guid: bb6192378c7971c4fa20ca90c0c3210e, type: 3}
   minHoldDistance: 0.5
@@ -11509,6 +11521,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5b7cffbc6cc7f04e93ae1ee7234303b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IGrabbable
+  angularDamping: 3
+  maxAngularSpeed: 4
+  linearDamping: 0.1
 --- !u!54 &1077495191
 Rigidbody:
   m_ObjectHideFlags: 0

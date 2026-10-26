@@ -78,16 +78,31 @@ public class PlayerInteractor : MonoBehaviour
 
         if (!interactAction.action.triggered) { Debug.Log("[1a] action НЕ triggered"); return; }
 
+        InteractNow();
+    }
+
+    // E was pressed: with an item in hand, hand it to the visitor you point at or drop it;
+    // with empty hands, interact with whatever is pointed at.
+    public void InteractNow()
+    {
+        Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+        var interactable = FindTarget(ray);
+
         if (heldObject != null)
         {
+            // A visitor takes the item you hold (a quest hand-in) instead of it being dropped.
+            if (interactable is NPCQuest)
+            {
+                Debug.Log("[1c] отдаём предмет из рук посетителю");
+                interactable.Interact(this);
+                return;
+            }
+
             Debug.Log("[1b] держим объект -> Drop");
             Drop();
             return;
         }
 
-        Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-
-        var interactable = FindTarget(ray);
         Debug.Log($"[3] IInteractable = {(interactable != null ? interactable.GetType().Name : "NULL")}");
         interactable?.Interact(this);
     }
@@ -105,7 +120,8 @@ public class PlayerInteractor : MonoBehaviour
 
         foreach (var rayHit in rayHits)
         {
-            if (IsShadowTrigger(rayHit.collider))
+            // the item in your own hands is not what you are pointing at
+            if (IsShadowTrigger(rayHit.collider) || IsHeld(rayHit.collider))
                 continue;
 
             exact = InteractableOf(rayHit.collider);
@@ -124,7 +140,7 @@ public class PlayerInteractor : MonoBehaviour
 
         foreach (var sphereHit in Physics.SphereCastAll(ray, interactRadius, interactDistance))
         {
-            if (IsShadowTrigger(sphereHit.collider) || sphereHit.distance > wall + 0.15f)
+            if (IsShadowTrigger(sphereHit.collider) || IsHeld(sphereHit.collider) || sphereHit.distance > wall + 0.15f)
                 continue;
 
             var target = InteractableOf(sphereHit.collider);
@@ -151,6 +167,11 @@ public class PlayerInteractor : MonoBehaviour
             return bestItem;
 
         return exact != null ? exact : bestOther;
+    }
+
+    bool IsHeld(Collider collider)
+    {
+        return heldRb != null && collider.attachedRigidbody == heldRb;
     }
 
     // What a collider stands for. A grabbable with a kinematic body cannot be held (it is a display

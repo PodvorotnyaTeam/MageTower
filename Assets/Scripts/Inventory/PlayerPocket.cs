@@ -89,9 +89,8 @@ public class PlayerPocket : MonoBehaviour
             return;
         }
 
-        // An enchanted item keeps its enchantments: they travel with the slot.
-        EnchantableItem enchantable = held.GetComponent<EnchantableItem>();
-        object payload = enchantable != null ? enchantable.CaptureState() : null;
+        // An item with its own state (enchantments, potion rarity) keeps it: the state travels with the slot.
+        object payload = PocketState.Capture(held);
 
         bool stored = payload != null
             ? inventory.AddItemWithPayload(itemId, payload)
@@ -129,13 +128,7 @@ public class PlayerPocket : MonoBehaviour
 
         GameObject item = Instantiate(prefab, interactor.holdPoint.position, interactor.holdPoint.rotation);
 
-        if (payload != null)
-        {
-            EnchantableItem enchantable = item.GetComponent<EnchantableItem>();
-
-            if (enchantable != null)
-                enchantable.RestoreState(payload);
-        }
+        PocketState.Restore(item, payload);
 
         IGrabbable grabbable = item.GetComponent<IGrabbable>();
 

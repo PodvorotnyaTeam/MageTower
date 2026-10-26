@@ -244,7 +244,7 @@ public class Inventory : MonoBehaviour
         {
             if (slotImage != null)
             {
-                slotImage.color = slot.payload != null ? new Color(1f, 0.75f, 0.4f) : Color.white;
+                slotImage.color = PocketState.TintOf(slot.payload);
                 if (data != null && data.items.Count > slot.itemId)
                     slotImage.sprite = data.items[slot.itemId].img;
             }
@@ -327,7 +327,7 @@ public class Inventory : MonoBehaviour
             {
                 if (slotImage != null)
                 {
-                    slotImage.color = slotData.payload != null ? new Color(1f, 0.75f, 0.4f) : Color.white;
+                    slotImage.color = PocketState.TintOf(slotData.payload);
                     if (data != null && data.items.Count > slotData.itemId)
                         slotImage.sprite = data.items[slotData.itemId].img;
                 }
