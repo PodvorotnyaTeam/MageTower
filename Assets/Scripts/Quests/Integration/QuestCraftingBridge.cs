@@ -67,6 +67,20 @@ public class QuestCraftingBridge : MonoBehaviour
         AdvanceObjectives(ObjectiveType.EnchantItem, itemID, 1);
     }
 
+    private static bool EffectRequirementMet(QuestObjectiveData objective, ObjectiveType type, string targetID)
+    {
+        if (type != ObjectiveType.EnchantItem || string.IsNullOrEmpty(objective.requiredEffect))
+            return true;
+
+        foreach (var item in FindObjectsByType<EnchantableItem>(FindObjectsSortMode.None))
+        {
+            if (item.ItemID == targetID && EnchantingService.ItemHasEffect(item, objective.requiredEffect))
+                return true;
+        }
+
+        return false;
+    }
+
     private void AdvanceObjectives(ObjectiveType type, string targetID, int amount)
     {
         if (questManager == null)
@@ -87,7 +101,8 @@ public class QuestCraftingBridge : MonoBehaviour
                 if (objective.data == null ||
                     objective.data.type != type ||
                     objective.data.targetID != targetID ||
-                    objective.isCompleted)
+                    objective.isCompleted ||
+                    !EffectRequirementMet(objective.data, type, targetID))
                     continue;
 
                 objective.currentAmount = Mathf.Min(

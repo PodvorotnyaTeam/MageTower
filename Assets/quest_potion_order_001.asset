@@ -29,3 +29,4 @@ MonoBehaviour:
   rewardGold: 100
   timeLimit: 180
   requiredFlags: []
+  nextQuest: {fileID: 11400000, guid: bf760ec9ea64f8744a43ca422f1dfa0f, type: 2}

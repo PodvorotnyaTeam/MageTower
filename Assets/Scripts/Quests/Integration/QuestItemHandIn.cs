@@ -27,6 +27,7 @@ public static class QuestItemHandIn
                 .Where(item => item != null &&
                                !picked.Contains(item) &&
                                item.itemID == objective.data.targetID &&
+                               MeetsRequirement(item, objective.data) &&
                                IsInRange(item.transform, origin, radius))
                 .OrderBy(item => Distance(item.transform, origin))
                 .Take(objective.data.requiredAmount)
@@ -51,6 +52,15 @@ public static class QuestItemHandIn
     private static bool NeedsItem(ObjectiveType type)
     {
         return type == ObjectiveType.CraftPotion || type == ObjectiveType.EnchantItem;
+    }
+
+    // An enchanted item is only accepted if it really has the enchantment the quest asks for.
+    private static bool MeetsRequirement(QuestItem item, QuestObjectiveData objective)
+    {
+        if (objective.type != ObjectiveType.EnchantItem)
+            return true;
+
+        return EnchantingService.ItemHasEffect(item.GetComponent<EnchantableItem>(), objective.requiredEffect);
     }
 
     private static bool IsInRange(Transform item, Transform origin, float radius)

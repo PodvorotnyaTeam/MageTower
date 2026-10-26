@@ -21,4 +21,7 @@ public class QuestData : ScriptableObject
     public float timeLimit;
 
     public List<string> requiredFlags;
+
+    [Tooltip("Quest that arrives with a new visitor after this one is handed in. Optional.")]
+    public QuestData nextQuest;
 }

@@ -43,6 +43,23 @@ public static class EnchantingService
     }
 
     /// <summary>
+    /// True if the item has the effect. An empty effect id means any enchantment.
+    /// </summary>
+    public static bool ItemHasEffect(EnchantableItem item, string effectID)
+    {
+        if (item == null || item.enchants.Count == 0)
+            return false;
+
+        if (string.IsNullOrEmpty(effectID))
+            return true;
+
+        var station = Object.FindFirstObjectByType<EnchantingStation>();
+        var effects = Evaluate(item, station != null ? station.Synergies : null);
+
+        return effects.TryGetValue(effectID, out float power) && power > 0f;
+    }
+
+    /// <summary>
     /// Effect id -> strength. The same symbol repeated on the item adds up,
     /// a rune made of a matching material adds a bonus, and a pair of
     /// different symbols from the synergy list adds its own effect.
