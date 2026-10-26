@@ -34,12 +34,13 @@ public class GameManager : MonoBehaviour
 
     public void Play()
     {
-        SceneManager.LoadScene("Game");
+        SceneManager.LoadScene("MainScene");
     }
-    public void BackToMenuFromGame()
+
+    public void Continue()
     {
-        fromGame = true; // Устанавливаем флаг перед загрузкой меню
-        SceneManager.LoadScene("MainMenu");
+        Time.timeScale = 1.0f;
+        SceneManager.UnloadSceneAsync("MainMenu");
     }
 
     public void Back()
