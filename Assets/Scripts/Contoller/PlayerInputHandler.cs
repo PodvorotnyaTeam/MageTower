@@ -133,6 +133,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void OpenGameMenu()
     {
+        SaveSystem.Save();
         Time.timeScale = 0f;
         GameManager.fromGame = true;
         SceneManager.LoadScene("MainMenu", LoadSceneMode.Additive);

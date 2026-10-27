@@ -33,8 +33,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Play continues the saved game if there is one, otherwise it starts a new one.
     public void Play()
     {
+        // The pause menu stops time. A scene that starts with timeScale 0 is frozen: nothing moves.
+        Time.timeScale = 1.0f;
+        SaveSystem.PrepareToStart(true);
+        SceneManager.LoadScene("MainScene");
+    }
+
+    public void NewGame()
+    {
+        Time.timeScale = 1.0f;
+        SaveSystem.PrepareToStart(false);
         SceneManager.LoadScene("MainScene");
     }
 
@@ -46,6 +57,8 @@ public class GameManager : MonoBehaviour
 
     public void Back()
     {
+        SaveSystem.Save();
+        Time.timeScale = 1.0f;
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -56,6 +69,8 @@ public class GameManager : MonoBehaviour
 
     public void MainMenu()
     {
+        // going to the main menu from the game: keep the progress so that Play continues it
+        SaveSystem.Save();
         panelGameMenu.SetActive(!panelGameMenu.activeSelf);
     }
 

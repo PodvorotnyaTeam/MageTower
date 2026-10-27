@@ -514,6 +514,16 @@ public class Inventory : MonoBehaviour
         return false;
     }
 
+    // ---- save / load (SaveSystem)
+
+    public System.Collections.Generic.IReadOnlyList<ItemSlot> HotbarSlots => hotbarSlots;
+    public System.Collections.Generic.IReadOnlyList<ItemSlot> InventorySlots => inventorySlots;
+
+    public void RefreshAll()
+    {
+        UpdateAllUI();
+    }
+
     public bool AddItemToInventory(int itemId, int count)
     {
         // Сначала ищем существующие стаки
