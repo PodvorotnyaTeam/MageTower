@@ -10,6 +10,9 @@ public class EventSystemSingleton : MonoBehaviour
         if (instance != null && instance != this)
         {
             // ”же есть один глобальный EventSystem Ч уничтожаем дубликат
+            // switch it off at once: Destroy only takes effect at the end of the frame, and until then
+            // Unity would complain that there are two event systems
+            gameObject.SetActive(false);
             Destroy(gameObject);
             return;
         }

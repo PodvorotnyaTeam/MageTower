@@ -166,9 +166,29 @@ namespace MageTower.Shop
         /// Если EventSystem / InputSystemUIInputModule по какой-либо причине не передал клик в кнопку,
         /// этот метод гарантированно находит кнопку под курсором и вызывает её onClick.
         /// </summary>
+        private static bool UiModuleIsUsable()
+        {
+            var es = EventSystem.current;
+
+            if (es == null || !es.isActiveAndEnabled)
+                return false;
+
+            var module = es.currentInputModule as InputSystemUIInputModule;
+
+            return module != null && module.isActiveAndEnabled
+                && module.point != null && module.point.action != null
+                && module.leftClick != null && module.leftClick.action != null;
+        }
+
         private void HandleDirectClickFallback()
         {
             if (Mouse.current == null || !Mouse.current.leftButton.wasPressedThisFrame)
+                return;
+
+            // The normal UI path (EventSystem + InputSystemUIInputModule) clicks on release. Running
+            // this fallback as well (it clicks on press) fired every button twice, so it only works
+            // when that path is not available.
+            if (UiModuleIsUsable())
                 return;
 
             // Если клик уже был обработан в этом кадре (через EventSystem), дублировать не нужно
