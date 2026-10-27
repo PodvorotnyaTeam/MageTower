@@ -43,8 +43,14 @@ public class PlayerInputHandler : MonoBehaviour
         control.Dispose();
     }
 
+    // While a shop book is open its own UI handles the keys (this check came with the old Input.cs).
+    private static bool ShopBookOpen => MageTower.Shop.BookStation.IsAnyBookOpen;
+
     private void OnPausePressed(InputAction.CallbackContext ctx)
     {
+        if (ShopBookOpen)
+            return;
+
         if (!fromInventory)
         {
             OpenGameMenu();
@@ -57,12 +63,18 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void OnInventoryPressed(InputAction.CallbackContext ctx)
     {
+        if (ShopBookOpen)
+            return;
+
         if (panelInventory.activeSelf) CloseInventory();
         else OpenInventory();
     }
 
     private void OnMagazinePressed(InputAction.CallbackContext ctx)
     {
+        if (ShopBookOpen)
+            return;
+
         if (panelMagazine.activeSelf) CloseMagazine();
         else OpenMagazine();
     }

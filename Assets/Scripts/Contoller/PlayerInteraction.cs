@@ -63,8 +63,12 @@ public class PlayerInteractor : MonoBehaviour
         return released;
     }
 
+    // The rays skip the "Ignore Raycast" (2) and "Water" (4) layers.
+    int layerMask;
+
     void Awake()
     {
+        layerMask = ~((1 << 2) | (1 << 4));
         cam = Camera.main; // <-- КЛЮЧЕВО
     }
 
@@ -86,6 +90,29 @@ public class PlayerInteractor : MonoBehaviour
     public void InteractNow()
     {
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+
+        // Shop delivery boxes: a box in the hands is put down and opened, and pointing exactly
+        // at a box opens it.
+        var heldBox = heldObject != null ? heldObject.GetComponent<MageTower.Shop.DeliveryBox>() : null;
+
+        if (heldBox != null)
+        {
+            Drop();
+            heldBox.Interact(this);
+            return;
+        }
+
+        if (heldObject == null && Physics.Raycast(ray, out RaycastHit boxHit, interactDistance, layerMask, QueryTriggerInteraction.Ignore))
+        {
+            var deliveryBox = boxHit.collider.GetComponentInParent<MageTower.Shop.DeliveryBox>();
+
+            if (deliveryBox != null)
+            {
+                deliveryBox.Interact(this);
+                return;
+            }
+        }
+
         var interactable = FindTarget(ray);
 
         if (heldObject != null)
@@ -112,7 +139,7 @@ public class PlayerInteractor : MonoBehaviour
     IInteractable FindTarget(Ray ray)
     {
         // 1. the exact ray: the nearest thing that is really there
-        RaycastHit[] rayHits = Physics.RaycastAll(ray, interactDistance);
+        RaycastHit[] rayHits = Physics.RaycastAll(ray, interactDistance, layerMask, QueryTriggerInteraction.Ignore);
         System.Array.Sort(rayHits, (a, b) => a.distance.CompareTo(b.distance));
 
         IInteractable exact = null;
@@ -121,7 +148,7 @@ public class PlayerInteractor : MonoBehaviour
         foreach (var rayHit in rayHits)
         {
             // the item in your own hands is not what you are pointing at
-            if (IsShadowTrigger(rayHit.collider) || IsHeld(rayHit.collider))
+            if (IsHeld(rayHit.collider))
                 continue;
 
             exact = InteractableOf(rayHit.collider);
@@ -138,9 +165,9 @@ public class PlayerInteractor : MonoBehaviour
         float bestItemDistance = float.MaxValue;
         float bestOtherDistance = float.MaxValue;
 
-        foreach (var sphereHit in Physics.SphereCastAll(ray, interactRadius, interactDistance))
+        foreach (var sphereHit in Physics.SphereCastAll(ray, interactRadius, interactDistance, layerMask, QueryTriggerInteraction.Ignore))
         {
-            if (IsShadowTrigger(sphereHit.collider) || IsHeld(sphereHit.collider) || sphereHit.distance > wall + 0.15f)
+            if (IsHeld(sphereHit.collider) || sphereHit.distance > wall + 0.15f)
                 continue;
 
             var target = InteractableOf(sphereHit.collider);
@@ -180,6 +207,10 @@ public class PlayerInteractor : MonoBehaviour
     {
         var target = collider.GetComponent<IInteractable>();
 
+        // an interactable object whose collider is on a child (a visitor, a shop piece)
+        if (target == null)
+            target = collider.GetComponentInParent<IInteractable>();
+
         if (target is IGrabbable grabbable
             && grabbable.TryGetComponent(out Rigidbody body)
             && body.isKinematic)
@@ -190,22 +221,6 @@ public class PlayerInteractor : MonoBehaviour
         }
 
         return target;
-    }
-
-    // A trigger volume on top of a solid collider of the same object (the zone above the enchanting
-    // table) must not hide what is inside it.
-    static bool IsShadowTrigger(Collider collider)
-    {
-        if (!collider.isTrigger)
-            return false;
-
-        foreach (var other in collider.GetComponents<Collider>())
-        {
-            if (other != collider && !other.isTrigger)
-                return true;
-        }
-
-        return false;
     }
 
     public void OnScroll()

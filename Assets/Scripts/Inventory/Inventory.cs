@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class Inventory : MonoBehaviour
 {
@@ -737,7 +738,8 @@ public class Inventory : MonoBehaviour
 
     private void DragItem()
     {
-        draggingItem.position = Input.mousePosition + dragOffset;
+        Vector3 mousePos = Mouse.current != null ? (Vector3)Mouse.current.position.ReadValue() : Vector3.zero;
+        draggingItem.position = mousePos + dragOffset;
     }
 
     // ==================== HELPER лерндш ====================

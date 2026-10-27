@@ -23,6 +23,12 @@ public class Ingridient : ScriptableObject
     public float cookingTime;
     public float overcookingTime;
 
+    [Header("Shop Settings")]
+    [Tooltip("Стоимость ингредиента в магазине")]
+    public int price = 10;
+    [Tooltip("Иконка ингредиента для отображения на страницах книги")]
+    public Sprite icon;
+
     public void Awake()
     {
         attributes = new List<int> { tocisity, acidity, volatility, viscosity, thermoactivity, vitality, conductivity, psychoactivity, entropy };
