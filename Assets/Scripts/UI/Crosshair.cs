@@ -85,6 +85,8 @@ public class Crosshair : MonoBehaviour
     private void Update()
     {
         if (image != null)
-            image.enabled = !PlayerInputHandler.fromInventory && Time.timeScale > 0f;
+            image.enabled = !PlayerInputHandler.fromInventory
+                && !MageTower.Shop.BookStation.IsAnyBookOpen
+                && Time.timeScale > 0f;
     }
 }

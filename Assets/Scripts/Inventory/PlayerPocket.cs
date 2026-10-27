@@ -26,8 +26,8 @@ public class PlayerPocket : MonoBehaviour
         if (interactor == null || inventory == null || Keyboard.current == null)
             return;
 
-        // The inventory or the journal is open: the keys belong to the UI.
-        if (PlayerInputHandler.fromInventory)
+        // The inventory, the journal or a shop book is open: the keys belong to the UI.
+        if (PlayerInputHandler.fromInventory || MageTower.Shop.BookStation.IsAnyBookOpen)
             return;
 
         PrepareHotbar();

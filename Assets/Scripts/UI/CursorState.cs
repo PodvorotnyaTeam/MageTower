@@ -33,7 +33,11 @@ public class CursorState : MonoBehaviour
         }
 
         // The pause menu stops time, so a stopped game also means a free cursor.
-        bool menuOpen = PlayerInputHandler.fromInventory || Time.timeScale <= 0f;
+        // A shop book being read frees the cursor too (BookStation does that itself every frame, so
+        // locking it here would make the two fight).
+        bool menuOpen = PlayerInputHandler.fromInventory
+            || MageTower.Shop.BookStation.IsAnyBookOpen
+            || Time.timeScale <= 0f;
         bool locked = hasPlayer && !menuOpen;
 
         Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
