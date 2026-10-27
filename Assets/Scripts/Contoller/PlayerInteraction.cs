@@ -64,11 +64,10 @@ public class PlayerInteractor : MonoBehaviour
     }
 
     // The rays skip the "Ignore Raycast" (2) and "Water" (4) layers.
-    int layerMask;
+    int layerMask = ~((1 << 2) | (1 << 4));
 
     void Awake()
     {
-        layerMask = ~((1 << 2) | (1 << 4));
         cam = Camera.main; // <-- КЛЮЧЕВО
     }
 

@@ -273,7 +273,8 @@ public class CauldronState : MonoBehaviour
         // Не запускаем повторно, если варка уже идёт
         if (isBrewing) return;
 
-        if (isThereIngredient == false)
+        // brew only when something has dissolved in the cauldron (the flag is set when an ingredient dissolves)
+        if (isThereIngredient)
         {
             StartCoroutine(BrewRoutine());
         }
