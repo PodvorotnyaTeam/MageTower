@@ -90,6 +90,17 @@ public class TimeManager : MonoBehaviour
 
     }
 
+    // Used when a saved game is loaded.
+    public void SetTime(int day, int hour, int minute)
+    {
+        currentDay = day;
+        currentHour = hour;
+        currentMinute = minute;
+        timer = 0f;
+
+        OnTimeChanged?.Invoke(currentHour, currentMinute);
+    }
+
     public string GetTimeString()
     {
         return $"{currentHour:00}:{currentMinute:00}";
