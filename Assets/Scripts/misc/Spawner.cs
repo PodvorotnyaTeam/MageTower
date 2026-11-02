@@ -13,8 +13,61 @@ public class Spawner : MonoBehaviour, IInteractable
     [SerializeField] private GameObject worldItemPrefab;
     [SerializeField] private Transform spawnLocation;
 
+    [Tooltip("true = spawn worldItemPrefab in the world (ingredient for the cauldron). false = put the item into the inventory.")]
+    [SerializeField] private bool spawnInWorld = true;
+
+    private void SpawnInWorld()
+    {
+        if (worldItemPrefab == null || spawnLocation == null)
+        {
+            Debug.LogWarning($"[Spawner] {name}: worldItemPrefab or spawnLocation is not assigned.");
+            return;
+        }
+
+        GameObject item = Instantiate(worldItemPrefab, spawnLocation);
+        LiftUntilFree(item);
+    }
+
+    // Items spawned one after another at the same point used to overlap and were pushed out of each
+    // other so hard that some fell through the floor. Lift the new one until it is clear of loose items.
+    private static void LiftUntilFree(GameObject item)
+    {
+        Collider own = item.GetComponentInChildren<Collider>();
+
+        if (own == null)
+            return;
+
+        for (int attempt = 0; attempt < 12; attempt++)
+        {
+            Bounds bounds = own.bounds;
+            bool blocked = false;
+
+            foreach (Collider other in Physics.OverlapBox(bounds.center, bounds.extents * 0.95f, Quaternion.identity, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+            {
+                // only other loose items count, not the floor, the box or kinematic display samples
+                if (other.transform.IsChildOf(item.transform) || other.attachedRigidbody == null || other.attachedRigidbody.isKinematic)
+                    continue;
+
+                blocked = true;
+                break;
+            }
+
+            if (!blocked)
+                return;
+
+            item.transform.position += Vector3.up * (bounds.size.y + 0.02f);
+            Physics.SyncTransforms();
+        }
+    }
+
     public void Interact(PlayerInteractor interactor)
     {
+        if (spawnInWorld)
+        {
+            SpawnInWorld();
+            return;
+        }
+
         Debug.Log($"[4] Spawner.Interact вызван, itemId={itemId}, Instance={(Inventory.Instance != null)}");
 
         // 1. ѕытаемс€ найти инвентарь

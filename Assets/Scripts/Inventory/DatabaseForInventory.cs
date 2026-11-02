@@ -13,4 +13,7 @@ public class Item
     public int id;
     public string name;
     public Sprite img;
+
+    [Tooltip("Prefab spawned in the hand when the item is taken out of the hotbar.")]
+    public GameObject worldPrefab;
 }

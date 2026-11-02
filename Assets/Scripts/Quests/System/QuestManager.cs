@@ -15,6 +15,9 @@ public class QuestManager : MonoBehaviour
     public event Action<QuestInstance> OnQuestCompleted;
     public event Action<QuestInstance> OnQuestReadyToTurnIn;
 
+    [Tooltip("How far from the player quest items may be to count as handed in.")]
+    [SerializeField] private float handInRadius = 6f;
+
     private void Awake()
     {
         Instance = this;
@@ -65,16 +68,22 @@ public class QuestManager : MonoBehaviour
         return quest.objectives.All(o => o.isCompleted);
     }
 
-    public void TurnInQuest(string questID)
+    public bool TurnInQuest(string questID, Transform handInOrigin = null)
     {
         var quest = activeQuests.FirstOrDefault(q => q.data.id == questID);
 
-        if (quest == null) return;
+        if (quest == null) return false;
 
         if (!CanTurnIn(questID))
         {
             Debug.Log("Quest not completed yet");
-            return;
+            return false;
+        }
+
+        if (!QuestItemHandIn.TryConsume(quest, handInOrigin, handInRadius))
+        {
+            Debug.Log("Quest items not found near the player");
+            return false;
         }
 
         GiveReward(quest);
@@ -87,6 +96,8 @@ public class QuestManager : MonoBehaviour
         Debug.Log($"Quest completed: {questID}");
 
         OnQuestCompleted?.Invoke(quest);
+
+        return true;
     }
     private void HandleItemCollected(string itemID, int amount)
     {

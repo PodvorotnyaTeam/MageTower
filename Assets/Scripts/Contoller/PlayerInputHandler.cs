@@ -10,6 +10,7 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] private GameObject gameHotbarPanel;
     [SerializeField] private Inventory inventory;
 
+    // True while the inventory or the journal is open.
     public static bool fromInventory = false;
 
     private Control control;
@@ -28,6 +29,7 @@ public class PlayerInputHandler : MonoBehaviour
         panelInventory.SetActive(false);
         panelMagazine.SetActive(false);
         gameHotbarPanel.SetActive(true);
+        UpdateOpenState();
     }
 
     private void OnEnable() => control.Player.Enable();
@@ -41,59 +43,97 @@ public class PlayerInputHandler : MonoBehaviour
         control.Dispose();
     }
 
+    // While a shop book is open its own UI handles the keys (this check came with the old Input.cs).
+    private static bool ShopBookOpen => MageTower.Shop.BookStation.IsAnyBookOpen;
+
     private void OnPausePressed(InputAction.CallbackContext ctx)
     {
+        if (ShopBookOpen)
+            return;
+
         if (!fromInventory)
         {
             OpenGameMenu();
+            return;
         }
-        else
-        {
-            CloseInventory();
-        }
+
+        CloseInventory();
+        CloseMagazine();
     }
 
     private void OnInventoryPressed(InputAction.CallbackContext ctx)
     {
-        if (fromInventory) CloseInventory();
+        if (ShopBookOpen)
+            return;
+
+        if (panelInventory.activeSelf) CloseInventory();
         else OpenInventory();
     }
 
     private void OnMagazinePressed(InputAction.CallbackContext ctx)
     {
-        if (fromInventory) Magazine();
-        else CloseInventory();
+        if (ShopBookOpen)
+            return;
+
+        if (panelMagazine.activeSelf) CloseMagazine();
+        else OpenMagazine();
     }
 
     private void OpenInventory()
     {
-        fromInventory = true;
         panelInventory.SetActive(true);
         if (gameHotbarPanel != null) gameHotbarPanel.SetActive(false);
-        if (inventory != null) inventory.OnInventoryOpen();
+        CurrentInventory?.OnInventoryOpen();
+        UpdateOpenState();
     }
 
     private void CloseInventory()
     {
-        fromInventory = false;
+        if (!panelInventory.activeSelf) return;
+
         panelInventory.SetActive(false);
-        panelMagazine.SetActive(false);
         if (gameHotbarPanel != null) gameHotbarPanel.SetActive(true);
-        if (inventory != null) inventory.OnInventoryClose();
+        CurrentInventory?.OnInventoryClose();
+        UpdateOpenState();
     }
 
+    // The field is not assigned in the scene, so fall back to the scene's inventory.
+    // (global:: because the method Inventory() below hides the class name inside this class)
+    private Inventory CurrentInventory => inventory != null ? inventory : global::Inventory.Instance;
+
+    private void OpenMagazine()
+    {
+        panelMagazine.SetActive(true);
+        UpdateOpenState();
+    }
+
+    private void CloseMagazine()
+    {
+        panelMagazine.SetActive(false);
+        UpdateOpenState();
+    }
+
+    private void UpdateOpenState()
+    {
+        fromInventory = panelInventory.activeSelf || panelMagazine.activeSelf;
+    }
+
+    // Called by UI buttons.
     public void Magazine()
     {
-        panelMagazine.SetActive(!panelMagazine.activeSelf);
+        if (panelMagazine.activeSelf) CloseMagazine();
+        else OpenMagazine();
     }
 
     public void Inventory()
     {
-        panelInventory.SetActive(!panelInventory.activeSelf);
+        if (panelInventory.activeSelf) CloseInventory();
+        else OpenInventory();
     }
 
     private void OpenGameMenu()
     {
+        SaveSystem.Save();
         Time.timeScale = 0f;
         GameManager.fromGame = true;
         SceneManager.LoadScene("MainMenu", LoadSceneMode.Additive);

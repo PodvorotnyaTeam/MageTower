@@ -42,6 +42,27 @@ public class ReputationManager : MonoBehaviour
         Debug.Log($"{faction.factionName} reputation: {rep.reputation}");
     }
 
+    public IReadOnlyList<FactionReputation> All => reputations;
+
+    // Used when a saved game is loaded.
+    public void ResetReputations()
+    {
+        reputations.Clear();
+    }
+
+    public void SetReputation(FactionData faction, int value)
+    {
+        var rep = reputations.Find(r => r.faction == faction);
+
+        if (rep == null)
+        {
+            rep = new FactionReputation { faction = faction };
+            reputations.Add(rep);
+        }
+
+        rep.reputation = value;
+    }
+
     public ReputationRank GetRank(int reputation)
     {
         if (reputation < -50)

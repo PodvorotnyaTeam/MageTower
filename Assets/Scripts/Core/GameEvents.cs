@@ -6,4 +6,5 @@ public static class GameEvents
     public static Action<string> OnQuestFailed;
     public static Action<string, int> OnItemCollected;
     public static Action<string, int> OnPotionCrafted;
+    public static Action<string, string> OnItemEnchanted;
 }

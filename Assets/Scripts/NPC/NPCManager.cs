@@ -14,6 +14,8 @@ public class NPCManager : MonoBehaviour
 
     [SerializeField] private QuestData testQuest;
 
+    private QuestData pendingNextQuest;
+
     private void Awake()
     {
         Instance = this;
@@ -22,6 +24,8 @@ public class NPCManager : MonoBehaviour
     private void Start()
     {
         QuestManager.Instance.OnQuestReadyToTurnIn += HandleQuestReady;
+
+        GameEvents.OnQuestTurnedIn += HandleQuestTurnedIn;
 
         SpawnNPC(testQuest);
     }
@@ -110,9 +114,28 @@ public class NPCManager : MonoBehaviour
 
     private void OnDestroy()
     {
+        GameEvents.OnQuestTurnedIn -= HandleQuestTurnedIn;
         if (QuestManager.Instance != null)
             QuestManager.Instance.OnQuestReadyToTurnIn -= HandleQuestReady;
     }
+    // When a quest is handed in, the next quest of the chain (QuestData.nextQuest) arrives with a new visitor.
+    private void HandleQuestTurnedIn(string questID)
+    {
+        QuestInstance done = QuestManager.Instance.completedQuests.Find(q => q.data.id == questID);
+
+        if (done == null || done.data.nextQuest == null)
+            return;
+
+        pendingNextQuest = done.data.nextQuest;
+        Invoke(nameof(SpawnPendingQuestNpc), 4f);
+    }
+
+    private void SpawnPendingQuestNpc()
+    {
+        SpawnNPC(pendingNextQuest);
+        pendingNextQuest = null;
+    }
+
     private void HandleQuestReady(QuestInstance quest)
     {
         Debug.Log($"NPCManager: квест можно сдавать: {quest.data.id}");

@@ -15,6 +15,7 @@ public class QuestCraftingBridge : MonoBehaviour
     private void OnEnable()
     {
         GameEvents.OnPotionCrafted += HandlePotionCrafted;
+        GameEvents.OnItemEnchanted += HandleItemEnchanted;
     }
 
     private void Start()
@@ -28,6 +29,7 @@ public class QuestCraftingBridge : MonoBehaviour
     private void OnDisable()
     {
         GameEvents.OnPotionCrafted -= HandlePotionCrafted;
+        GameEvents.OnItemEnchanted -= HandleItemEnchanted;
     }
 
     private void Update()
@@ -57,10 +59,34 @@ public class QuestCraftingBridge : MonoBehaviour
 
     private void HandlePotionCrafted(string potionID, int amount)
     {
+        AdvanceObjectives(ObjectiveType.CraftPotion, potionID, amount);
+    }
+
+    private void HandleItemEnchanted(string itemID, string symbolID)
+    {
+        AdvanceObjectives(ObjectiveType.EnchantItem, itemID, 1);
+    }
+
+    private static bool EffectRequirementMet(QuestObjectiveData objective, ObjectiveType type, string targetID)
+    {
+        if (type != ObjectiveType.EnchantItem || string.IsNullOrEmpty(objective.requiredEffect))
+            return true;
+
+        foreach (var item in FindObjectsByType<EnchantableItem>(FindObjectsSortMode.None))
+        {
+            if (item.ItemID == targetID && EnchantingService.ItemHasEffect(item, objective.requiredEffect))
+                return true;
+        }
+
+        return false;
+    }
+
+    private void AdvanceObjectives(ObjectiveType type, string targetID, int amount)
+    {
         if (questManager == null)
             questManager = QuestManager.Instance;
 
-        if (questManager == null || amount <= 0 || string.IsNullOrWhiteSpace(potionID))
+        if (questManager == null || amount <= 0 || string.IsNullOrWhiteSpace(targetID))
             return;
 
         foreach (var quest in questManager.activeQuests.ToList())
@@ -73,9 +99,10 @@ public class QuestCraftingBridge : MonoBehaviour
             foreach (var objective in quest.objectives)
             {
                 if (objective.data == null ||
-                    objective.data.type != ObjectiveType.CraftPotion ||
-                    objective.data.targetID != potionID ||
-                    objective.isCompleted)
+                    objective.data.type != type ||
+                    objective.data.targetID != targetID ||
+                    objective.isCompleted ||
+                    !EffectRequirementMet(objective.data, type, targetID))
                     continue;
 
                 objective.currentAmount = Mathf.Min(
@@ -88,13 +115,13 @@ public class QuestCraftingBridge : MonoBehaviour
             if (!questUpdated)
                 continue;
 
-            Debug.Log($"Potion quest updated: {quest.data.id} -> {potionID}");
+            Debug.Log($"Quest updated: {quest.data.id} -> {targetID}");
 
             if (quest.readyToTurnIn || !quest.objectives.All(o => o.isCompleted))
                 continue;
 
             quest.readyToTurnIn = true;
-            Debug.Log($"Potion quest ready to turn in: {quest.data.id}");
+            Debug.Log($"Quest ready to turn in: {quest.data.id}");
 
             // The original NPC leaves after accepting an order. Spawn the
             // return visit when the requested potion has been crafted.

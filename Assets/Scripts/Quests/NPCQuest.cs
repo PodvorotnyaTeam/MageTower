@@ -24,9 +24,15 @@ public class NPCQuest : MonoBehaviour, IInteractable
         {
             if (QuestManager.Instance.CanTurnIn(quest.id))
             {
-                Debug.Log("Quest turned in");
+                Transform handInOrigin = interactor != null ? interactor.transform : null;
 
-                QuestManager.Instance.TurnInQuest(quest.id);
+                if (!QuestManager.Instance.TurnInQuest(quest.id, handInOrigin))
+                {
+                    Debug.Log("Quest items are missing");
+                    return;
+                }
+
+                Debug.Log("Quest turned in");
 
                 GameEvents.OnQuestTurnedIn?.Invoke(quest.id);
 
