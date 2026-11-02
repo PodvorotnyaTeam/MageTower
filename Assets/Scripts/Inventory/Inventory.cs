@@ -1,8 +1,9 @@
+using NUnit.Framework.Internal.Execution;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
@@ -40,6 +41,8 @@ public class Inventory : MonoBehaviour
 
     public static Inventory Instance { get; private set; }
 
+    [HideInInspector] public int currentSelectedHotbarIndex = 0;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -54,7 +57,6 @@ public class Inventory : MonoBehaviour
     {
         InitializeInventoryGrid();
         InitializeHotbarUI();
-        //AddTestItems(); // random test items, off now that real items exist
         UpdateAllUI();
     }
 
@@ -74,8 +76,6 @@ public class Inventory : MonoBehaviour
         float hue = (id * 0.6180339887f) % 1f;
         return Color.HSVToRGB(hue, 0.65f, 0.85f);
     }
-
-    // ==================== ПУБЛИЧНЫЕ МЕТОДЫ ДЛЯ INPUT СКРИПТА ====================
 
     // Вызывается, когда инвентарь открывается
     public void OnInventoryOpen()
@@ -109,19 +109,6 @@ public class Inventory : MonoBehaviour
         }
         return null;
     }
-
-    // Установить выбранный слот хотбара (по индексу)
-    public void SetSelectedHotbarSlot(int index)
-    {
-        for (int i = 0; i < gameHotbarUISlots.Count; i++)
-        {
-            var outline = gameHotbarUISlots[i]?.GetComponent<Outline>();
-            if (outline != null)
-                outline.enabled = (i == index);
-        }
-    }
-
-    // ==================== ИНИЦИАЛИЗАЦИЯ ====================
 
     private void InitializeInventoryGrid()
     {
@@ -198,9 +185,6 @@ public class Inventory : MonoBehaviour
         // Здесь можно добавить использование предмета по двойному клику и т.д.
     }
 
-    // ==================== UI ОБНОВЛЕНИЕ ====================
-
-    //Временный метод, пока не появились спрайты для айтемов
     private void UpdateSlotUI(ItemSlot slot)
     {
         if (slot.slotObject == null) return;
@@ -223,67 +207,41 @@ public class Inventory : MonoBehaviour
             return;
         }
 
-        if (useDebugColors)
+        if (slotImage != null)
         {
-            if (slotImage != null)
-            {
-                slotImage.sprite = null;
-                slotImage.color = GetColorById(slot.itemId);
-            }
-
-            if (countText != null)
-            {
-                Debug.Log($"[UpdateSlotUI] slot.itemId={slot.itemId}, slot.count={slot.count}, text={countText.name}");
-
-                countText.supportRichText = true;
-                countText.resizeTextForBestFit = false;
-                // ID на первой строке, количество — на второй. Оба видны всегда.
-                countText.text = $"<size=14>ID:{slot.itemId}</size>\n<size=20>x{slot.count}</size>";
-            }
+            slotImage.color = PocketState.TintOf(slot.payload);
+            if (data != null && data.items.Count > slot.itemId)
+                slotImage.sprite = data.items[slot.itemId].img;
         }
-        else
-        {
-            if (slotImage != null)
-            {
-                slotImage.color = PocketState.TintOf(slot.payload);
-                if (data != null && data.items.Count > slot.itemId)
-                    slotImage.sprite = data.items[slot.itemId].img;
-            }
 
-            if (countText != null)
-                countText.text = slot.count > 1 ? slot.count.ToString() : "";
-        }
+        if (countText != null)
+            countText.text = slot.count > 1 ? slot.count.ToString() : "";
     }
+
     //private void UpdateSlotUI(ItemSlot slot)
     //{
     //    if (slot.slotObject == null) return;
 
-    //    Image slotImage = slot.slotObject.GetComponent<Image>();
-    //    Text countText = slot.slotObject.GetComponentInChildren<Text>();
+    //    Transform itemTransform = slot.slotObject.transform.Find("Item");
+    //    Image slotImage = itemTransform != null ? itemTransform.GetComponent<Image>() : null;
+    //    Text countText = itemTransform != null ? itemTransform.GetComponentInChildren<Text>() : null;
 
     //    if (slot.itemId == emptyItemId || slot.count <= 0)
     //    {
-    //        // Пустой слот - показываем empty иконку
-    //        if (data != null && data.items.Count > emptyItemId)
-    //            slotImage.sprite = data.items[emptyItemId].img;
-    //        else
-    //            slotImage.sprite = null;
+    //        if (slotImage != null)
+    //            slotImage.sprite = (data != null && data.items.Count > emptyItemId) ? data.items[emptyItemId].img : null;
 
-    //        if (countText != null)
-    //            countText.text = "";
+    //        if (countText != null) countText.text = "";
+    //        return;
     //    }
-    //    else
-    //    {
-    //        // Слот с предметом
-    //        if (data != null && data.items.Count > slot.itemId)
-    //            slotImage.sprite = data.items[slot.itemId].img;
 
-    //        if (countText != null)
-    //            countText.text = slot.count > 1 ? slot.count.ToString() : "";
-    //    }
+    //    if (slotImage != null && data != null && data.items.Count > slot.itemId)
+    //        slotImage.sprite = data.items[slot.itemId].img;
+
+    //    if (countText != null)
+    //        countText.text = slot.count > 1 ? slot.count.ToString() : "";
     //}
 
-    //Временный метод, пока не появились спрайты для айтемов
     private void UpdateGameHotbarUI()
     {
         for (int i = 0; i < hotbarSize && i < gameHotbarUISlots.Count && i < hotbarSlots.Count; i++)
@@ -309,60 +267,63 @@ public class Inventory : MonoBehaviour
                 continue;
             }
 
-            if (useDebugColors)
+            if (slotImage != null)
             {
-                if (slotImage != null)
-                {
-                    slotImage.sprite = null;
-                    slotImage.color = GetColorById(slotData.itemId);
-                }
-                if (countText != null)
-                {
-                    countText.supportRichText = true;
-                    string idPart = $"<size=30>ID{slotData.itemId}</size>";
-                    string countPart = slotData.count > 1 ? $"\n{slotData.count}" : "";
-                    countText.text = idPart + countPart;
-                }
+                slotImage.color = PocketState.TintOf(slotData.payload);
+                if (data != null && data.items.Count > slotData.itemId)
+                    slotImage.sprite = data.items[slotData.itemId].img;
             }
-            else
-            {
-                if (slotImage != null)
-                {
-                    slotImage.color = PocketState.TintOf(slotData.payload);
-                    if (data != null && data.items.Count > slotData.itemId)
-                        slotImage.sprite = data.items[slotData.itemId].img;
-                }
-                if (countText != null)
-                    countText.text = slotData.count > 1 ? slotData.count.ToString() : "";
-            }
+            if (countText != null)
+                countText.text = slotData.count > 1 ? slotData.count.ToString() : "";
         }
     }
+
     //private void UpdateGameHotbarUI()
     //{
     //    for (int i = 0; i < hotbarSize && i < gameHotbarUISlots.Count && i < hotbarSlots.Count; i++)
     //    {
     //        var slotData = hotbarSlots[i];
     //        var uiObject = gameHotbarUISlots[i];
-
     //        if (uiObject == null) continue;
 
-    //        Image slotImage = uiObject.GetComponent<Image>();
-    //        Text countText = uiObject.GetComponentInChildren<Text>();
+    //        Transform itemTransform = uiObject.transform.Find("Item");
+    //        Image slotImage = itemTransform != null ? itemTransform.GetComponent<Image>() : null;
+    //        Text countText = itemTransform != null ? itemTransform.GetComponentInChildren<Text>() : null;
 
     //        if (slotData.itemId == emptyItemId || slotData.count <= 0)
     //        {
-    //            if (data != null && data.items.Count > emptyItemId)
-    //                slotImage.sprite = data.items[emptyItemId].img;
+    //            if (slotImage != null)
+    //                slotImage.sprite = (data != null && data.items.Count > emptyItemId) ? data.items[emptyItemId].img : null;
+
     //            if (countText != null) countText.text = "";
+    //            continue;
     //        }
-    //        else
-    //        {
-    //            if (data != null && data.items.Count > slotData.itemId)
-    //                slotImage.sprite = data.items[slotData.itemId].img;
-    //            if (countText != null) countText.text = slotData.count > 1 ? slotData.count.ToString() : "";
-    //        }
+
+    //        if (slotImage != null && data != null && data.items.Count > slotData.itemId)
+    //            slotImage.sprite = data.items[slotData.itemId].img;
+
+    //        if (countText != null)
+    //            countText.text = slotData.count > 1 ? slotData.count.ToString() : "";
     //    }
     //}
+
+    public void CycleHotbarSlot(int direction)
+    {
+        int newIndex = currentSelectedHotbarIndex + direction;
+        if (newIndex < 0) newIndex = hotbarSize - 1;
+        if (newIndex >= hotbarSize) newIndex = 0;
+        SetSelectedHotbarSlot(newIndex);
+    }
+
+    public void SetSelectedHotbarSlot(int index)
+    {
+        currentSelectedHotbarIndex = Mathf.Clamp(index, 0, hotbarSize - 1);
+        for (int i = 0; i < gameHotbarUISlots.Count; i++)
+        {
+            var outline = gameHotbarUISlots[i]?.GetComponent<Outline>();
+            if (outline != null) outline.enabled = (i == currentSelectedHotbarIndex);
+        }
+    }
 
     private void UpdateAllUI()
     {
@@ -380,35 +341,6 @@ public class Inventory : MonoBehaviour
         slot.itemId = emptyItemId;
         slot.count = 0;
         slot.payload = null;
-    }
-
-    // ==================== ДОБАВЛЕНИЕ ПРЕДМЕТОВ ====================
-
-    private void AddTestItems()
-    {
-        if (data == null) return;
-
-        // Добавляем тестовые предметы в инвентарь
-        for (int i = 0; i < inventorySize / 3; i++)
-        {
-            if (data.items.Count > 1)
-            {
-                int randomItem = Random.Range(1, data.items.Count);
-                int randomCount = Random.Range(1, 65);
-                AddItemToInventory(randomItem, randomCount);
-            }
-        }
-
-        // Добавляем тестовые предметы в хотбар
-        for (int i = 0; i < hotbarSize / 2; i++)
-        {
-            if (data.items.Count > 1)
-            {
-                int randomItem = Random.Range(1, data.items.Count);
-                int randomCount = Random.Range(1, 65);
-                AddItemToHotbar(randomItem, randomCount);
-            }
-        }
     }
 
     /// <summary>
@@ -434,8 +366,6 @@ public class Inventory : MonoBehaviour
         return false;
     }
 
-    // ---- pocket helpers (PlayerPocket)
-
     public GameObject GetWorldPrefab(int itemId)
     {
         if (data == null || itemId <= emptyItemId || itemId >= data.items.Count)
@@ -444,7 +374,6 @@ public class Inventory : MonoBehaviour
         return data.items[itemId].worldPrefab;
     }
 
-    // Finds the item id of a world object by the name of the prefab it was made from.
     public int FindItemIdByWorldObject(GameObject worldObject)
     {
         if (data == null || worldObject == null)
@@ -463,7 +392,6 @@ public class Inventory : MonoBehaviour
         return emptyItemId;
     }
 
-    // Takes one item out of the selected hotbar slot and returns its id (emptyItemId if there is none).
     public int TakeOneFromSelectedHotbarSlot()
     {
         ItemSlot slot = GetSelectedHotbarItem();
@@ -482,8 +410,6 @@ public class Inventory : MonoBehaviour
         return itemId;
     }
 
-    // Puts one item that carries its own state into an empty hotbar slot, or an empty
-    // inventory slot. Such items never stack.
     public bool AddItemWithPayload(int itemId, object payload)
     {
         for (int i = 0; i < hotbarSize; i++)
@@ -514,8 +440,6 @@ public class Inventory : MonoBehaviour
         return false;
     }
 
-    // ---- save / load (SaveSystem)
-
     public System.Collections.Generic.IReadOnlyList<ItemSlot> HotbarSlots => hotbarSlots;
     public System.Collections.Generic.IReadOnlyList<ItemSlot> InventorySlots => inventorySlots;
 
@@ -526,8 +450,14 @@ public class Inventory : MonoBehaviour
 
     public bool AddItemToInventory(int itemId, int count)
     {
-        // Сначала ищем существующие стаки
-        for (int i = 0; i < inventorySize; i++)
+        if (data == null || itemId <= emptyItemId || itemId >= data.items.Count)
+        {
+            Debug.LogWarning($"[Inventory] Некорректный ID: {itemId}");
+            return false;
+        }
+
+        // Ищем стаки
+        for (int i = 0; i < inventorySlots.Count; i++) // <-- ИСПОЛЬЗУЕМ Count
         {
             if (inventorySlots[i].itemId == itemId && inventorySlots[i].count < 64 && inventorySlots[i].payload == null)
             {
@@ -538,7 +468,7 @@ public class Inventory : MonoBehaviour
         }
 
         // Ищем пустые слоты
-        for (int i = 0; i < inventorySize; i++)
+        for (int i = 0; i < inventorySlots.Count; i++) // <-- ИСПОЛЬЗУЕМ Count
         {
             if (inventorySlots[i].itemId == emptyItemId)
             {
@@ -554,7 +484,13 @@ public class Inventory : MonoBehaviour
 
     public bool AddItemToHotbar(int itemId, int count)
     {
-        for (int i = 0; i < hotbarSize; i++)
+        if (data == null || itemId <= emptyItemId || itemId >= data.items.Count)
+        {
+            Debug.LogWarning($"[Inventory] Некорректный ID: {itemId}");
+            return false;
+        }
+
+        for (int i = 0; i < hotbarSlots.Count; i++) // <-- ИСПОЛЬЗУЕМ Count
         {
             if (hotbarSlots[i].itemId == itemId && hotbarSlots[i].count < 64 && hotbarSlots[i].payload == null)
             {
@@ -564,7 +500,7 @@ public class Inventory : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < hotbarSize; i++)
+        for (int i = 0; i < hotbarSlots.Count; i++) // <-- ИСПОЛЬЗУЕМ Count
         {
             if (hotbarSlots[i].itemId == emptyItemId)
             {
@@ -594,8 +530,6 @@ public class Inventory : MonoBehaviour
         return count - toAdd;
     }
 
-    // ==================== ЛОГИКА ПЕРЕМЕЩЕНИЯ ====================
-
     private void SelectSlot(int slotIndex, SlotType type)
     {
         Debug.Log($"[SelectSlot] index={slotIndex}, type={type}, selectedSlotId={selectedSlotId}");
@@ -615,18 +549,8 @@ public class Inventory : MonoBehaviour
 
                 //Временно, пока не появились спрайты
                 var dragImage = draggingItem.GetComponent<Image>();
-                if (useDebugColors)
-                {
-                    dragImage.sprite = null;
-                    dragImage.color = GetColorById(slot.itemId);
-                }
-                else if (data != null && data.items.Count > slot.itemId)
-                {
-                    dragImage.color = Color.white;
+                if (data != null && data.items.Count > slot.itemId)
                     dragImage.sprite = data.items[slot.itemId].img;
-                }
-                //if (data != null && data.items.Count > slot.itemId)
-                //    draggingItem.GetComponent<Image>().sprite = data.items[slot.itemId].img;
 
                 ClearSlot(slot);
                 UpdateSlotUI(slot);
@@ -721,7 +645,6 @@ public class Inventory : MonoBehaviour
             UpdateGameHotbarUI();
     }
 
-    // An item that is still on the cursor goes back into the slot it was picked from.
     private void ReturnDraggedItem()
     {
         if (selectedSlotId == -1 || selectedItem == null)
@@ -752,8 +675,6 @@ public class Inventory : MonoBehaviour
         draggingItem.position = mousePos + dragOffset;
     }
 
-    // ==================== HELPER МЕТОДЫ ====================
-
     private ItemSlot GetSlot(SlotType type, int index)
     {
         return type == SlotType.Inventory ? inventorySlots[index] : hotbarSlots[index];
@@ -771,6 +692,32 @@ public class Inventory : MonoBehaviour
             type = original.type
         };
     }
+
+    public void DropFromSelectedHotbar(Vector3 spawnPos, Vector3 forward)
+    {
+        var slot = hotbarSlots[currentSelectedHotbarIndex];
+        if (slot.itemId == emptyItemId || slot.count <= 0) return;
+
+        var itemData = data.items[slot.itemId];
+        if (itemData.worldPrefab == null) return;
+
+        // Спавним префаб перед камерой
+        Vector3 finalSpawnPos = spawnPos + forward * 1.2f;
+        GameObject spawned = Instantiate(itemData.worldPrefab, finalSpawnPos, Quaternion.identity);
+
+        // Настраиваем WorldItem
+        var worldItem = spawned.GetComponent<WorldItem>();
+        if (worldItem == null) worldItem = spawned.AddComponent<WorldItem>();
+        worldItem.itemId = slot.itemId;
+        worldItem.count = 1;
+
+        // Убираем 1 предмет из слота
+        slot.count--;
+        if (slot.count <= 0) ClearSlot(slot);
+
+        UpdateSlotUI(slot);
+        UpdateGameHotbarUI();
+    }
 }
 
 public enum SlotType
@@ -785,10 +732,9 @@ public class ItemSlot
     public int itemId;
     public int count;
 
-    // State of a single item that must survive the trip through the inventory
-    // (an enchanted sword). A slot with a payload never stacks.
     public object payload;
     public GameObject slotObject;
     public int slotIndex;
     public SlotType type;
 }
+

@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -5765802152374473950, guid: 6760a19fdd8eb9b42a502dfaad2cf9c1, type: 3}
+      propertyPath: itemId
+      value: 24
+      objectReference: {fileID: 0}
     - target: {fileID: 1049649672820080380, guid: 6760a19fdd8eb9b42a502dfaad2cf9c1, type: 3}
       propertyPath: m_Name
       value: Berserk_Potion

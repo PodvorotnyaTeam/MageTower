@@ -103,6 +103,7 @@ GameObject:
   - component: {fileID: -3597749389920171763}
   - component: {fileID: -2125812595847117703}
   - component: {fileID: 3738455433130746686}
+  - component: {fileID: -1262268848247353252}
   m_Layer: 6
   m_Name: Pinecone
   m_TagString: Untagged
@@ -166,6 +167,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5b7cffbc6cc7f04e93ae1ee7234303b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IGrabbable
+  angularDamping: 3
+  maxAngularSpeed: 4
+  linearDamping: 0.1
+  maxDepenetrationSpeed: 2
+  fallLimit: -5
 --- !u!135 &-2125812595847117703
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -201,6 +207,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::IngridientStats
   ingridient: {fileID: 11400000, guid: cab6e82419ff5a648810556f757a9351, type: 2}
   cookingTIMER: 0
+--- !u!114 &-1262268848247353252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5462978138148315582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c884420183cd4845ae737e7f7e8ba37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldItem
+  itemId: 2
+  count: 1
 --- !u!1 &6876381866731891152
 GameObject:
   m_ObjectHideFlags: 0

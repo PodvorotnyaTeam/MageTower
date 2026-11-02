@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Radius
       value: 0.23
       objectReference: {fileID: 0}
+    - target: {fileID: -1262268848247353252, guid: 06cc084b0c364d14dbd4de4cc6379c42, type: 3}
+      propertyPath: itemId
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2136674448852137786, guid: 06cc084b0c364d14dbd4de4cc6379c42, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 

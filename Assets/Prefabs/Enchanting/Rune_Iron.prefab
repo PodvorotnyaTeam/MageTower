@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2604554320208835230}
   - component: {fileID: 3103582348241871167}
   - component: {fileID: 5470486294444219628}
+  - component: {fileID: -6955344291531181859}
   m_Layer: 0
   m_Name: Rune_Iron
   m_TagString: Untagged
@@ -154,6 +155,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5b7cffbc6cc7f04e93ae1ee7234303b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IGrabbable
+  angularDamping: 3
+  maxAngularSpeed: 4
+  linearDamping: 0.1
+  maxDepenetrationSpeed: 2
+  fallLimit: -5
 --- !u!114 &5470486294444219628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,3 +173,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RuneItem
   rune: {fileID: 11400000, guid: 74d82a31ceeb1684e944d543e24ee7ea, type: 2}
+--- !u!114 &-6955344291531181859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1858758989546836857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c884420183cd4845ae737e7f7e8ba37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldItem
+  itemId: 21
+  count: 1
