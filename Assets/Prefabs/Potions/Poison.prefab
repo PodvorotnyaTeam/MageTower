@@ -236,6 +236,7 @@ GameObject:
   - component: {fileID: 4174100774149402466}
   - component: {fileID: 3122736579852292188}
   - component: {fileID: 7427649491521616689}
+  - component: {fileID: -5765802152374473950}
   m_Layer: 0
   m_Name: Poison
   m_TagString: Untagged
@@ -302,6 +303,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5b7cffbc6cc7f04e93ae1ee7234303b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IGrabbable
+  angularDamping: 3
+  maxAngularSpeed: 4
+  linearDamping: 0.1
+  maxDepenetrationSpeed: 2
+  fallLimit: -5
 --- !u!65 &7427649491521616689
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -323,6 +329,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.37634292, y: 0.5565399, z: 0.36892238}
   m_Center: {x: -0.0021320134, y: 0.09380889, z: -0.000000014901161}
+--- !u!114 &-5765802152374473950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1049649672820080380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c884420183cd4845ae737e7f7e8ba37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldItem
+  itemId: 30
+  count: 1
 --- !u!1 &3411212772945163040
 GameObject:
   m_ObjectHideFlags: 0
