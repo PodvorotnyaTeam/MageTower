@@ -23,10 +23,11 @@ MonoBehaviour:
     type: 1
     targetID: Heal_Potion
     requiredAmount: 1
+    requiredEffect: 
   faction: {fileID: 11400000, guid: 8637c53c0bfe7da47ad2b91ab3a0d862, type: 2}
   reputationReward: 25
   reputationPenalty: 15
   rewardGold: 100
-  timeLimit: 180
+  timeLimit: 600
   requiredFlags: []
   nextQuest: {fileID: 11400000, guid: bf760ec9ea64f8744a43ca422f1dfa0f, type: 2}
