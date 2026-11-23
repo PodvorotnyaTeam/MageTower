@@ -47,6 +47,7 @@ public class CampfireState : MonoBehaviour
                 if (audioSource.clip != null)
                 {
                     audioSource.loop = true;
+                    audioSource.volume = AudioManager.Instance.GetEffectsVolume();
                     if (!audioSource.isPlaying)
                     {
                         audioSource.Play();

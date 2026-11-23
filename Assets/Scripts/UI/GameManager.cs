@@ -5,24 +5,15 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public GameObject panelSettings;
-    public GameObject panelGameMenu;
-
-    public static bool fromGame = false;
+    public GameObject buttonContinue;
+    public GameObject buttonNewGame;
+    public GameObject buttonSettings;
+    public GameObject buttonExit;
+    public GameObject titleMageTower;
 
     private void Start()
     {
-        // Проверяем, нужно ли показывать GameMenu
-        if (fromGame)
-        {
-            panelSettings.SetActive(false);
-            panelGameMenu.SetActive(true);
-            fromGame = false; // Сбрасываем флаг
-        }
-        else
-        {
-            panelSettings.SetActive(false);
-            panelGameMenu.SetActive(false);
-        }
+        panelSettings.SetActive(false);
     }
 
     private void Update()
@@ -64,14 +55,12 @@ public class GameManager : MonoBehaviour
 
     public void Settings()
     {
+        titleMageTower.SetActive(!titleMageTower.activeSelf);
+        buttonContinue.SetActive(!buttonContinue.activeSelf);
+        buttonExit.SetActive(!buttonExit.activeSelf);
+        buttonNewGame.SetActive(!buttonNewGame.activeSelf);
+        buttonSettings.SetActive(!buttonSettings.activeSelf);
         panelSettings.SetActive(!panelSettings.activeSelf);
-    }
-
-    public void MainMenu()
-    {
-        // going to the main menu from the game: keep the progress so that Play continues it
-        SaveSystem.Save();
-        panelGameMenu.SetActive(!panelGameMenu.activeSelf);
     }
 
     public void Exit()

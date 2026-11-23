@@ -8,10 +8,13 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] private GameObject panelMagazine;
     [SerializeField] private GameObject panelInventory;
     [SerializeField] private GameObject gameHotbarPanel;
+    [SerializeField] private GameObject panelGameMenu;
+    [SerializeField] private GameObject panelSettings;
     [SerializeField] private Inventory inventory;
 
     // True while the inventory or the journal is open.
     public static bool fromInventory = false;
+    public static bool fromSettings = false;
 
     private Control control;
 
@@ -28,6 +31,8 @@ public class PlayerInputHandler : MonoBehaviour
     {
         panelInventory.SetActive(false);
         panelMagazine.SetActive(false);
+        panelGameMenu.SetActive(false);
+        panelSettings.SetActive(false);
         gameHotbarPanel.SetActive(true);
         UpdateOpenState();
     }
@@ -48,11 +53,25 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void OnPausePressed(InputAction.CallbackContext ctx)
     {
+        Debug.Log("Нажата кнопка ESC");
         if (ShopBookOpen)
             return;
 
+        if (fromSettings)
+        {
+            CloseSettings();
+            return;
+        }
+
+        if (Time.timeScale == 0)
+        {
+            CloseGameMenu();
+            return;
+        }
+
         if (!fromInventory)
         {
+            Debug.Log($"fromInventory = {fromInventory}");
             OpenGameMenu();
             return;
         }
@@ -94,6 +113,7 @@ public class PlayerInputHandler : MonoBehaviour
         panelInventory.SetActive(false);
         if (gameHotbarPanel != null) gameHotbarPanel.SetActive(true);
         CurrentInventory?.OnInventoryClose();
+        CloseMagazine();
         UpdateOpenState();
     }
 
@@ -117,6 +137,34 @@ public class PlayerInputHandler : MonoBehaviour
     {
         fromInventory = panelInventory.activeSelf || panelMagazine.activeSelf;
     }
+    private void OpenGameMenu()
+    {
+        SaveSystem.Save();
+        Time.timeScale = 0f;
+        panelGameMenu.SetActive(true);
+        gameHotbarPanel.SetActive(false);
+    }
+
+    private void CloseGameMenu()
+    {
+        Time.timeScale = 1f;
+        panelGameMenu.SetActive(false);
+        gameHotbarPanel.SetActive(true);
+    }
+
+    private void OpenSettings()
+    {
+        fromSettings = true;
+        panelSettings.SetActive(true);
+        panelGameMenu.SetActive(false);
+    }
+
+    private void CloseSettings()
+    {
+        fromSettings = false;
+        panelSettings.SetActive(false);
+        panelGameMenu.SetActive(true);
+    }
 
     // Called by UI buttons.
     public void Magazine()
@@ -131,11 +179,14 @@ public class PlayerInputHandler : MonoBehaviour
         else OpenInventory();
     }
 
-    private void OpenGameMenu()
+    public void Settings()
     {
-        SaveSystem.Save();
-        Time.timeScale = 0f;
-        GameManager.fromGame = true;
-        SceneManager.LoadScene("MainMenu", LoadSceneMode.Additive);
+        if (panelSettings.activeSelf) CloseSettings();
+        else OpenSettings();
+    }
+
+    public void Continue()
+    {
+        CloseGameMenu();
     }
 }
